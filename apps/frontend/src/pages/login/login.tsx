@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGithub, faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { GoogleLogin, GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import './login.css';
 
@@ -19,7 +20,7 @@ function Login() {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            setError('Passwords doesn\'t match');
+            setError('Passwords doesn\'t match!');
         } else {
             const signupData = {
                 name: name,
@@ -56,8 +57,24 @@ function Login() {
             })
     };
 
-    const handleGoogleLogin = async () => {
-        axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'google/login')
+    // const handleGoogleLogin = useGoogleLogin({
+    //     onSuccess: async (credentialResponse: any) => {
+    //         console.log(credentialResponse)
+    //         axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'google/login', {token : credentialResponse.credential})
+    //             .then(res => {
+    //                 console.log(res);
+    //                 navigateTo('/');
+    //             })
+    //             .catch(err => {
+    //                 setError(err.response.data.message);
+    //             })
+    //     },
+    //     onError: (error) => console.log("Login Failed", error)
+    // });
+
+    const handleGoogleLogin = async (credentialResponse: any) => {
+        console.log(credentialResponse)
+        axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'google/login', { token: credentialResponse.credential})
             .then(res => {
                 console.log(res);
                 navigateTo('/');
@@ -65,6 +82,10 @@ function Login() {
             .catch(err => {
                 setError(err.response.data.message);
             })
+    };
+
+    const handleGoogleLoginFailed = async () => {
+        console.log("Login Failed")
     };
 
     return (
@@ -124,7 +145,20 @@ function Login() {
                     <p className='error'>{error}</p>
                     <span>or login with</span>
                     <div className='social-icons'>
-                        <a onClick={handleGoogleLogin} className='icon'><FontAwesomeIcon icon={faGoogle} /></a>
+                        {/* <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}>
+                        <a onClick={() => {handleGoogleLogin}} className='icon'>
+                            <FontAwesomeIcon icon={faGoogle} />
+                        </a>
+                        </GoogleOAuthProvider> */}
+                        <div className='icon'>
+                            <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}>
+                                <GoogleLogin
+                                    type='icon'
+                                    onSuccess={handleGoogleLogin}
+                                    onError={handleGoogleLoginFailed}
+                                />
+                            </GoogleOAuthProvider>
+                        </div>
                         <a className='icon'><FontAwesomeIcon icon={faFacebook} /></a>
                         <a className='icon'><FontAwesomeIcon icon={faGithub} /></a>
                         <a className='icon'><FontAwesomeIcon icon={faLinkedin} /></a>

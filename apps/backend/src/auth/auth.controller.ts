@@ -6,7 +6,7 @@ import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor( private authService: AuthService ) {}
+    constructor(private authService: AuthService) { }
 
     @Post('signup')
     signUp(@Body(ValidationPipe) signUpDto: SignUpDto): Promise<{ token: string }> {
@@ -18,15 +18,15 @@ export class AuthController {
         return this.authService.login(loginDto);
     }
 
-    @Get('google/login')
-    @UseGuards(GoogleAuthGuard)
-    handleLogin() {
-        return { msg: 'done'}
+    @Post('google/login')
+    googleLogin(@Body() token): Promise<any> {
+        console.log(token)
+        return;
     }
-    
+
     @Get('google/redirect')
     @UseGuards(GoogleAuthGuard)
     handleRedirect() {
-        return { msg: 'done!'}
+        return { msg: 'done!' }
     }
 }

@@ -133,7 +133,7 @@ body {
     margin: 16px 0;
 }
 
-.social-icons a {
+.social-icons .icon {
     border: 1px solid #ccc;
     border-radius: 20%;
     display: inline-flex;
