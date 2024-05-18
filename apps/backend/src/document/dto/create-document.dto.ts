@@ -1,5 +1,4 @@
 import { IsNotEmpty, MinLength } from 'class-validator';
-import * as mongoose from 'mongoose';
 
 export class CreateDocumentDto {
     @IsNotEmpty()

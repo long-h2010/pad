@@ -22,8 +22,9 @@ export class DocumentService {
         return doc;
     }
 
-    async findAll() {
-        return await this.docModel.find();
+    async findDocsOwner(userId: string) {
+        const docs = this.docModel.find({ owners: userId });
+        return docs;
     }
 
     async findOne(id: string) {
@@ -49,7 +50,7 @@ export class DocumentService {
         return docUpdateOwner;
     }
 
-    async deleteOwner(role: string, docId: string, delUsersDto: UsersRoleDto) {
+    async deleteUsersRole(role: string, docId: string, delUsersDto: UsersRoleDto) {
         const doc = await this.docModel.findById(docId);
 
         const usersRole = role + 's';

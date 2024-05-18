@@ -74,7 +74,7 @@ function Login() {
 
     const handleGoogleLogin = async (credentialResponse: any) => {
         console.log(credentialResponse)
-        axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'google/login', { token: credentialResponse.credential})
+        axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'google/login', { token: credentialResponse.credential })
             .then(res => {
                 console.log(res);
                 navigateTo('/');

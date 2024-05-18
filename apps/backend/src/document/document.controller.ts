@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { DocumentService } from './document.service';
 import { UpdateDocumentDto } from './dto/update-document.dto';
@@ -7,6 +7,11 @@ import { UsersRoleDto } from './dto/users-role.dto';
 @Controller('document')
 export class DocumentController {
     constructor(private readonly docSevice: DocumentService) {}
+
+    @Get(':userId')
+    async findDocsOwner(@Param('userId') userId) {
+        return this.docSevice.findDocsOwner(userId)
+    }
 
     @Post(':userId')
     async create(@Param('userId') userId: string, @Body(ValidationPipe) createDocDto: CreateDocumentDto) {
@@ -25,6 +30,6 @@ export class DocumentController {
 
     @Put('delete-users/:role/:docId')
     async deleteOwner(@Param('role') role: string, @Param('docId') docId: string, @Body(ValidationPipe) delUsersDto: UsersRoleDto) {
-        return this.docSevice.deleteOwner(role, docId, delUsersDto);
+        return this.docSevice.deleteUsersRole(role, docId, delUsersDto);
     }
 }
