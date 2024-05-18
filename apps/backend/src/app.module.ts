@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { DatabaseModule } from 'database/database.module';
+import { UserModule } from './user/user.module';
+import { DocumentModule } from './document/document.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../..', 'frontend', 'dist'),
-    }),
+    DatabaseModule,
     AuthModule,
-    MongooseModule.forRoot(process.env.DB_URI),
+    UserModule,
+    DocumentModule
   ],
   controllers: [AppController],
   providers: [AppService],

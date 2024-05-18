@@ -6,13 +6,17 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/sign-up.dto';
 import { LoginDto } from './dto/login.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectModel(User.name)
         private userModel: Model<User>,
+
         private jwtService: JwtService,
+
+        private userService: UserService,
     ) { }
 
     async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
@@ -22,11 +26,7 @@ export class AuthService {
         const checkUser = await this.userModel.findOne({ email })
         if (checkUser) throw new UnauthorizedException('Email already exists!');
 
-        const user = await this.userModel.create({
-            name,
-            email,
-            password: hashedPassword
-        });
+        const user = await this.userService.create(name, email, hashedPassword);
 
         const token = this.jwtService.sign({ id: user._id });
 
@@ -34,7 +34,6 @@ export class AuthService {
     }
 
     async login(loginDto: LoginDto): Promise<{ token: string }> {
-        console.log(loginDto);
         const { email, password } = loginDto;
 
         const user = await this.userModel.findOne({ email })
@@ -43,7 +42,7 @@ export class AuthService {
         const isPasswordMatched = await bcrypt.compare(password, user.password);
         if (!isPasswordMatched) throw new UnauthorizedException('Invalid email or password!');
 
-        const token = this.jwtService.sign({ id: user._id });   
+        const token = this.jwtService.sign({ id: user._id });
 
         return { token };
     }
