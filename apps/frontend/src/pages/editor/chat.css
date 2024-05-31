@@ -1,0 +1,37 @@
+.chat-title {
+    display: inline-block; 
+    transform: rotate(-90deg); 
+}
+
+.chat-toggle-button {
+    position: absolute;
+    top: 88%;
+    left: 99%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 140px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #c4c0c0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    float: left;
+  }
+
+.chat-container {
+    position: absolute;
+    bottom: 3%;
+    right: 0%;
+    width: fit-content;
+    height: fit-content;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+.chat-container.open {
+    transform: translateX(-10%);
+}
+
+
+  

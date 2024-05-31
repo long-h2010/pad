@@ -1,0 +1,51 @@
+body {
+    background: white;
+    margin: 0;
+    padding: 0 !important;
+}
+
+#root {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    padding: 0 !important;
+}
+
+.tox-tinymce {
+    height: 100% !important;
+}
+
+.tox .tox-editor-container {
+    align-items: center;
+    width: 100%;
+    height: max-content !important;
+    background: #dddddd;
+}
+
+.tox .tox-editor-header {
+    width: 100%;
+    position: fixed;
+}
+
+.tox .tox-sidebar-wrap {
+    margin-top: 120px !important;
+    margin-bottom: 30px !important;
+}
+
+.tox .tox-edit-area {
+    width: 794px !important;
+    height: 1123px !important;
+    border-radius: 10px;
+    border: solid 1px #ece8e8;
+}
+
+.tox .tox-edit-area::before {
+    border: none !important;
+}
+
+#container {
+    position: relative;
+    overflow: hidden;
+}
+
+
