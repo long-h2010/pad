@@ -13,6 +13,10 @@ export default function MyEditor() {
 
 	return (
 		<div id='container'>
+			<div className='docs-header'>
+				<a href='http://localhost:5173/editor' style={{zIndex: 100}}><img className='docs__icon' src='https://cdn4.iconfinder.com/data/icons/free-colorful-icons/360/google_docs.png'/></a>
+				<h3 className='docs__name'>Tài liệu không có tiêu đề</h3>
+			</div>
 			<Editor
 			apiKey='tok1lhzg5h155ewt8cpsahu9pcvc5sh95ufqmjluksnky6ot'
 			init={{

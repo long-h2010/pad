@@ -2,41 +2,48 @@ body {
     background: white;
     margin: 0;
     padding: 0 !important;
+    height: 100%;
+    width: 100%;
 }
 
 #root {
-    width: 100% !important;
-    height: 100% !important;
     margin: 0;
     padding: 0 !important;
+    width: 100%;
+    max-width: 100% !important;
 }
 
 .tox-tinymce {
     height: 100% !important;
+    border: none !important;
 }
 
 .tox .tox-editor-container {
     align-items: center;
-    width: 100%;
     height: max-content !important;
     background: #dddddd;
 }
 
 .tox .tox-editor-header {
     width: 100%;
-    position: fixed;
+    position: absolute;
+    padding-top: 0 !important;
 }
 
 .tox .tox-sidebar-wrap {
-    margin-top: 120px !important;
-    margin-bottom: 30px !important;
+    margin-top: 8% !important;
+    margin-bottom: 3% !important;
 }
 
 .tox .tox-edit-area {
-    width: 794px !important;
-    height: 1123px !important;
+    width: 794px;
+    height: 1123px;
     border-radius: 10px;
     border: solid 1px #ece8e8;
+}
+
+.tox .tox-menubar {
+    padding-left: 60px !important;
 }
 
 .tox .tox-edit-area::before {
@@ -48,4 +55,20 @@ body {
     overflow: hidden;
 }
 
+.docs-header {
+    width: 100%;
+    height: 40px;
+    background-color: white;
+    display: flex;
+}
 
+.docs__icon {
+    width: 60px;
+    height: 70px;
+    padding: 10px;
+}
+
+.docs__name {
+    float: left;
+    padding: 10px;
+}
