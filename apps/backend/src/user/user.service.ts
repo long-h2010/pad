@@ -12,13 +12,13 @@ export class UserService {
         private userModel: Model<User>
     ) {}
 
-    async create(name: string, email: string, password: string) {
+    async create(name: string, username: string, password: string) {
         const user = await this.userModel.create({
             name,
-            email,
+            username,
             password,
         });
-        
+
         return user;
     }
 
@@ -26,9 +26,14 @@ export class UserService {
         return await this.userModel.find();
     }
 
-    async findOne(id: string) {
+    async findById(id: string) {
         const user = await this.userModel.findById(id);
-        if(!user || user === null) throw new NotFoundException('User Not Found');
+        if (!user || user === null) throw new NotFoundException('User Not Found');
+        return user;
+    }
+
+    async findByName(name: string) {
+        const user = await this.userModel.findOne({ username: name });
         return user;
     }
 
@@ -36,13 +41,13 @@ export class UserService {
         const newData = updateData;
 
         const password = updateData.password
-        if(password) {
-            if(password.length < 6) throw new BadRequestException('Password must have at least 6 characters');
+        if (password) {
+            if (password.length < 6) throw new BadRequestException('Password must have at least 6 characters');
             const hashedPassword = await bcrypt.hash(password, 10);
             newData.password = hashedPassword;
         }
 
-        const user = await this.userModel.findByIdAndUpdate(id, newData); 
+        const user = await this.userModel.findByIdAndUpdate(id, newData);
         return user;
     }
 }

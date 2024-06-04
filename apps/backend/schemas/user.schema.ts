@@ -5,8 +5,8 @@ export class User {
     @Prop()
     name: string;
 
-    @Prop({ unique: [true, 'Duplicate email entered'] })
-    email: string;
+    @Prop({ unique: [true, 'Duplicate username entered'] })
+    username: string;
 
     @Prop()
     password: string;

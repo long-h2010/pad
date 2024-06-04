@@ -1,21 +1,29 @@
-import { Body, Controller, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { DocumentService } from './document.service';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { UsersRoleDto } from './dto/users-role.dto';
+import { AuthGuard } from 'src/auth/utils/guards';
 
 @Controller('document')
 export class DocumentController {
     constructor(private readonly docSevice: DocumentService) {}
 
-    @Get(':userId')
-    async findDocsOwner(@Param('userId') userId) {
-        return this.docSevice.findDocsOwner(userId)
+    @Get('')
+    @UseGuards(AuthGuard)
+    async findDocsOwner(@Request() req) {
+        const user = req.user;
+        return this.docSevice.findDocsOwner(user.id)
     }
 
-    @Post(':userId')
+    @Post('create/:userId')
     async create(@Param('userId') userId: string, @Body(ValidationPipe) createDocDto: CreateDocumentDto) {
         return this.docSevice.create(userId, createDocDto);
+    }
+
+    @Get(':id')
+    async getDocById(@Param('id') id: string) {
+        return this.docSevice.findOne(id);
     }
 
     @Put(':id')

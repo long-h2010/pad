@@ -13,6 +13,17 @@ export class DocumentService {
         private docModel: Model<Document>
     ) {}
 
+    async findDocsOwner(userId: string) {
+        return await this.docModel.find({ owners: userId });
+    }
+
+    async findDocsShareWithMe(userId: string) {
+        const docsWriter = await this.docModel.find({ writers: userId });
+        const docsReader = await this.docModel.find({ readers: userId });
+        const docs = [...docsWriter, ...docsReader];
+        return docs;
+    }
+
     async create(userId: string, createDocDto: CreateDocumentDto) {
         const data = {
             ...createDocDto,
@@ -22,19 +33,14 @@ export class DocumentService {
         return doc;
     }
 
-    async findDocsOwner(userId: string) {
-        const docs = this.docModel.find({ owners: userId });
-        return docs;
-    }
-
     async findOne(id: string) {
         const doc = await this.docModel.findById(id);
-        if(!doc || doc === null) throw new NotFoundException('Document Not Found');
+        if (!doc || doc === null) throw new NotFoundException('Document Not Found');
         return doc;
     }
 
     async update(id: string, updateDocDto: UpdateDocumentDto) {
-        const doc = await this.docModel.findByIdAndUpdate(id, updateDocDto); 
+        const doc = await this.docModel.findByIdAndUpdate(id, updateDocDto);
         return doc;
     }
 
@@ -45,7 +51,7 @@ export class DocumentService {
         const usersId = [...doc[usersRole].map(id => id.toString()), ...addUsersDto.users];
 
         const users = Array.from(new Set(usersId));
-        
+
         const docUpdateOwner = await this.docModel.findByIdAndUpdate(docId, { [usersRole]: users });
         return docUpdateOwner;
     }
@@ -55,7 +61,7 @@ export class DocumentService {
 
         const usersRole = role + 's';
         const users = [...doc[usersRole].filter(id => !delUsersDto.users.includes(id.toString()))];
-        
+
         const docUpdateOwner = await this.docModel.findByIdAndUpdate(docId, { [usersRole]: users });
         return docUpdateOwner;
     }

@@ -11,7 +11,7 @@ function Login() {
 
     const [action, setAction] = useState('Login');
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setconfirmPassword] = useState('');
     const [error, setError] = useState('');
@@ -19,18 +19,17 @@ function Login() {
     const handelSubmitSignup = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (password !== confirmPassword) {
+        if(password !== confirmPassword) {
             setError('Passwords doesn\'t match!');
         } else {
             const signupData = {
                 name: name,
-                email: email,
+                username: username,
                 password: password,
-            }
+            };
 
-            axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'signup', signupData)
+            axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'register', signupData)
                 .then(res => {
-                    console.log(res);
                     setError('');
                     setAction('Login');
                 })
@@ -43,13 +42,12 @@ function Login() {
     const handleSubmitLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const loginData = { email: email, password: password };
-
-        console.log(loginData);
+        const loginData = { username: username, password: password };
 
         axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'login', loginData)
             .then(res => {
-                console.log(res);
+                localStorage.setItem('token', res.data.token);
+                console.log(localStorage)
                 navigateTo('/');
             })
             .catch(err => {
@@ -85,7 +83,7 @@ function Login() {
     };
 
     const handleGoogleLoginFailed = async () => {
-        console.log("Login Failed")
+        console.log("Login Failed");
     };
 
     return (
@@ -102,10 +100,10 @@ function Login() {
                     />
                     <input
                         required
-                        type='email'
-                        value={email}
-                        placeholder='Enter your email'
-                        onChange={e => setEmail(e.target.value)}
+                        type='text'
+                        value={username}
+                        placeholder='Enter your username'
+                        onChange={e => setUsername(e.target.value)}
                     />
                     <input
                         required
@@ -130,10 +128,10 @@ function Login() {
                     <h1>Login</h1>
                     <input
                         required
-                        type='email'
-                        value={email}
-                        placeholder='Enter your email'
-                        onChange={e => setEmail(e.target.value)}
+                        type='text'
+                        value={username}
+                        placeholder='Enter your username'
+                        onChange={e => setUsername(e.target.value)}
                     />
                     <input
                         required
