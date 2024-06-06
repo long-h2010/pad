@@ -13,9 +13,6 @@ export class Document {
     @Prop([String])
     tag: string[];
 
-    @Prop({ default: false })
-    isDeleted: boolean;
-
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
     owners: User[];
 
@@ -24,6 +21,9 @@ export class Document {
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
     readers: User[];
+
+    @Prop({ default: false })
+    isDeleted: boolean;
 }
 
 export const DocumentSchema = SchemaFactory.createForClass(Document);
