@@ -3,7 +3,7 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { DocumentService } from './document.service';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { UsersRoleDto } from './dto/users-role.dto';
-import { AuthGuard } from 'src/auth/utils/guards';
+import { AuthGuard } from 'src/auth/utils/guard';
 
 @Controller('document')
 export class DocumentController {

@@ -18,7 +18,7 @@ export default function DocumentList() {
     <section className='docs-container'>
       <div className='docs-center'>
         {documents.map((item, index) => {
-          return <Document key={index}/>
+          return <Document key={index} thumnail={''} title={''} time={''}/>
         })}
       </div>
     </section>

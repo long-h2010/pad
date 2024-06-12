@@ -22,7 +22,6 @@ export class AuthService {
         const user = await this.userService.create(name, username, hashedPassword);
 
         const token = await this.jwtService.signAsync({ id: user._id });
-
         return { token };
     }
 
@@ -36,7 +35,21 @@ export class AuthService {
         if (!isPasswordMatched) throw new UnauthorizedException('Invalid Username or password!');
 
         const token = await this.jwtService.signAsync({ id: user._id });
-
         return { token };
+    }
+
+    async googleLogin(token: string): Promise<any> {
+        // const { username } = loginDto;
+
+        // const user = await this.userService.findByName(username);
+
+        // if (user) {
+        //     const token = await this.jwtService.signAsync({ id: user._id });
+        //     return { token };
+        // } else {
+        //     return 
+        // }
+        const payload = await this.jwtService.verifyAsync(token, { secret: process.env.GOOGLE_SECRET });
+        console.log(payload)
     }
 }

@@ -8,7 +8,9 @@ function Profile() {
             console.log(res)
         })
 
-    return (<></>);
+    return (
+        <></>
+    );
 }
 
 export default Profile
