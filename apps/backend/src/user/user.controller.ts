@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Put, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from 'src/auth/utils/guard';
 
 @Controller('user')
 export class UserController {
@@ -19,5 +20,24 @@ export class UserController {
     @Put(':id')    
     async update(@Param('id') id: string, @Body(ValidationPipe) updateData: UpdateUserDto) {
         return this.userSevice.update(id, updateData);
+    }
+
+    @Post('/change-password')
+    @UseGuards(AuthGuard)
+    async changePassword(@Request() req: any, @Body() passwordData: any) {
+        try {
+            const user = req.user;
+            if (!user) throw new Error('Login data does not exist');
+
+            return this.userSevice.changePassword(user.id, passwordData);
+        } catch (err: any) {
+            throw new Error(`Error at change password in user controller: ${err}`);
+        }
+    }
+
+    @Post('/forgot-password')
+    async forgotPassword(@Request() req: any) {
+        const user = req.user;
+        return this.userSevice.forgotPassword();
     }
 }
