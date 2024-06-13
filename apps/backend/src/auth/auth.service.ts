@@ -19,7 +19,13 @@ export class AuthService {
         const checkUser = await this.userService.findByName(username);
         if (checkUser) throw new UnauthorizedException('Username already exists!');
 
-        const user = await this.userService.create(name, username, hashedPassword);
+        const data = {
+            name: name,
+            username: username,
+            password: hashedPassword
+        };
+
+        const user = await this.userService.create(data);
 
         const token = await this.jwtService.signAsync({ id: user._id });
         return { token };
@@ -38,18 +44,24 @@ export class AuthService {
         return { token };
     }
 
-    async googleLogin(token: string): Promise<any> {
-        // const { username } = loginDto;
+    async googleLogin(payload: any): Promise<{ token: string }> {
+        const username = payload.email;
+        const user = await this.userService.findByName(username);
 
-        // const user = await this.userService.findByName(username);
+        if (user) {
+            const token = await this.jwtService.signAsync({ id: user._id });
+            return { token };
+        } else {
+            const data = {
+                name: payload.name,
+                username: username,
+                avatar: payload.picture,
+            }
 
-        // if (user) {
-        //     const token = await this.jwtService.signAsync({ id: user._id });
-        //     return { token };
-        // } else {
-        //     return 
-        // }
-        const payload = await this.jwtService.verifyAsync(token, { secret: process.env.GOOGLE_SECRET });
-        console.log(payload)
+            const newUser = await this.userService.create(data);
+
+            const token = await this.jwtService.signAsync({ id: newUser._id });
+            return { token };
+        }
     }
 }

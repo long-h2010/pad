@@ -3,6 +3,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ChatSchema } from 'schemas/chat.schema';
 import { DocumentSchema } from 'schemas/document.schema';
 import { UserSchema } from 'schemas/user.schema';
+import { config } from 'dotenv';
+
+config();
 
 @Module({
     imports: [

@@ -8,6 +8,7 @@ import './login.css';
 
 function Login() {
     const navigateTo = useNavigate();
+    const auth_url = import.meta.env.VITE_APP_AUTH_URL;
 
     const [action, setAction] = useState('Login');
     const [name, setName] = useState('');
@@ -28,7 +29,7 @@ function Login() {
                 password: password,
             };
 
-            axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'register', signupData)
+            axios.post(auth_url + 'register', signupData)
                 .then(res => {
                     setError('');
                     setAction('Login');
@@ -44,7 +45,7 @@ function Login() {
 
         const loginData = { username: username, password: password };
 
-        axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'login', loginData)
+        axios.post(auth_url + 'login', loginData)
             .then(res => {
                 localStorage.setItem('token', res.data.token);
                 console.log(localStorage)
@@ -58,7 +59,7 @@ function Login() {
     // const handleGoogleLogin = useGoogleLogin({
     //     onSuccess: async (credentialResponse: any) => {
     //         console.log(credentialResponse)
-    //         axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'google/login', {token : credentialResponse.credential})
+    //         axios.post(auth_url + 'google/login', {token : credentialResponse.credential})
     //             .then(res => {
     //                 console.log(res);
     //                 navigateTo('/');
@@ -71,8 +72,8 @@ function Login() {
     // });
 
     const handleGoogleLogin = async (credentialResponse: any) => {
-        console.log(credentialResponse)
-        axios.post(import.meta.env.VITE_APP_AUTHLOGIN_URL + 'google/login', { token: credentialResponse.credential })
+        const token = credentialResponse.credential;
+        axios.post(auth_url + 'google/login', { token: token })
             .then(res => {
                 console.log(res);
                 navigateTo('/');
@@ -151,15 +152,15 @@ function Login() {
                         <div className='icon'>
                             <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}>
                                 <GoogleLogin
-                                    type='icon'
+                                    type='standard'
                                     onSuccess={handleGoogleLogin}
                                     onError={handleGoogleLoginFailed}
                                 />
                             </GoogleOAuthProvider>
                         </div>
-                        <a className='icon'><FontAwesomeIcon icon={faFacebook} /></a>
+                        {/* <a className='icon'><FontAwesomeIcon icon={faFacebook} /></a>
                         <a className='icon'><FontAwesomeIcon icon={faGithub} /></a>
-                        <a className='icon'><FontAwesomeIcon icon={faLinkedin} /></a>
+                        <a className='icon'><FontAwesomeIcon icon={faLinkedin} /></a> */}
                     </div>
                     <button type='submit'>Login</button>
                 </form>

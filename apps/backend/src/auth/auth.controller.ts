@@ -1,9 +1,13 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
-import { GoogleAuthGuard } from './utils/google-guard';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from './utils/guard';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_SECRET,
+);  
 
 @Controller('auth')
 export class AuthController {
@@ -21,21 +25,13 @@ export class AuthController {
     }
 
     @Post('google/login')
-    async googleLogin(@Body() token: string): Promise<any> {
-        console.log(token)
-        return await this.authService.googleLogin(token);
-    }
+    async handleRedirect(@Body('token') token): Promise<any> {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
 
-    @Post('google/redirect')
-    @UseGuards(GoogleAuthGuard)
-    async handleRedirect(@Request() req: any): Promise<any> {
-        console.log(req)
-        // return await this.authService.googleLogin(token);
-    }
-
-    @Get('profile')
-    @UseGuards(AuthGuard)
-    async getProfile(@Request() req) {
-        return req.user;
+        const payload = ticket.getPayload();
+        return this.authService.googleLogin(payload);
     }
 }

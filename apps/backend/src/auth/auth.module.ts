@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
-import { GoogleStrategy } from './utils/google-strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -24,6 +23,6 @@ import { UserService } from 'src/user/user.service';
     DatabaseModule,
   ],
   controllers: [AuthController],
-  providers: [GoogleStrategy, AuthService, UserService],
+  providers: [AuthService, UserService],
 })
 export class AuthModule {}
