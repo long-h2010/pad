@@ -2,21 +2,36 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+// import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { DatabaseModule } from 'database/database.module';
 import { UserService } from 'src/user/user.service';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
       useFactory: async () => ({
         secret: process.env.JWT_SECRET,
         signOptions: {
           expiresIn: process.env.JWT_EXPIRE,
+        },
+      }),
+    }),
+    MailerModule.forRootAsync({
+      useFactory: async () => ({
+        transport: {
+          host: 'localhost',
+          port: 3000,
+          secure: false,
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS
+          }
+        },
+        default: {
+          from: 'No reply <Pad>'
         },
       }),
     }),

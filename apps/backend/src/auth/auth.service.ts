@@ -3,12 +3,15 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { UserService } from 'src/user/user.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
     constructor(
         private jwtService: JwtService,
+        private mailerService: MailerService,
         private userService: UserService,
     ) {}
 
@@ -63,5 +66,15 @@ export class AuthService {
             const token = await this.jwtService.signAsync({ id: newUser._id });
             return { token };
         }
+    }
+
+    async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+        this.mailerService.sendMail({
+            to: forgotPasswordDto.email,
+            text: 'Hello',
+            html: '<b>Hello</b>'
+        })
+            .then(success => console.log(success))
+            .catch(err => { throw new Error(`Error in send email: ${err}`) })
     }
 }

@@ -30,7 +30,7 @@ function Login() {
             };
 
             axios.post(auth_url + 'register', signupData)
-                .then(res => {
+                .then(() => {
                     setError('');
                     setAction('Login');
                 })
@@ -48,7 +48,6 @@ function Login() {
         axios.post(auth_url + 'login', loginData)
             .then(res => {
                 localStorage.setItem('token', res.data.token);
-                console.log(localStorage)
                 navigateTo('/');
             })
             .catch(err => {
@@ -68,14 +67,14 @@ function Login() {
     //                 setError(err.response.data.message);
     //             })
     //     },
-    //     onError: (error) => console.log("Login Failed", error)
+    //     onError: (error) => console.log('Login Failed', error)
     // });
 
     const handleGoogleLogin = async (credentialResponse: any) => {
         const token = credentialResponse.credential;
         axios.post(auth_url + 'google/login', { token: token })
             .then(res => {
-                console.log(res);
+                localStorage.setItem('token', res.data.token);
                 navigateTo('/');
             })
             .catch(err => {
@@ -84,7 +83,7 @@ function Login() {
     };
 
     const handleGoogleLoginFailed = async () => {
-        console.log("Login Failed");
+        console.log('Login Failed');
     };
 
     return (
@@ -110,14 +109,14 @@ function Login() {
                         required
                         type='password'
                         value={password}
-                        placeholder="Enter your password"
+                        placeholder='Enter your password'
                         onChange={e => setPassword(e.target.value)}
                     />
                     <input
                         required
                         type='password'
                         value={confirmPassword}
-                        placeholder="Confirm password"
+                        placeholder='Confirm password'
                         onChange={e => setconfirmPassword(e.target.value)}
                     />
                     <p className='error'>{error}</p>
@@ -138,7 +137,7 @@ function Login() {
                         required
                         type='password'
                         value={password}
-                        placeholder="Enter your password"
+                        placeholder='Enter your password'
                         onChange={e => setPassword(e.target.value)}
                     />
                     <p className='error'>{error}</p>

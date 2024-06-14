@@ -34,10 +34,4 @@ export class UserController {
             throw new Error(`Error at change password in user controller: ${err}`);
         }
     }
-
-    @Post('/forgot-password')
-    async forgotPassword(@Request() req: any) {
-        const user = req.user;
-        return this.userSevice.forgotPassword();
-    }
 }

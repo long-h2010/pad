@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faFolder } from '@fortawesome/free-solid-svg-icons';
 import SearchForm from '../../components/SearchForm';
-import DocumentList from '../../components/DocumentList';
+import DocumentList from '../../components/doc-list';
 import './home.css';
 
 function Home() {
@@ -20,13 +20,13 @@ function Home() {
             })
     }, []);
 
-    const renderDocuments = documents.map(doc => {
-        return (
-            <li key={doc._id}>
-                <a href={`/document/${doc._id}`}>{doc.name}</a>
-            </li>
-        );
-    })
+    // const renderDocuments = documents.map(doc => {
+    //     return (
+    //         <li key={doc._id}>
+    //             <a href={`/document/${doc._id}`}>{doc.name}</a>
+    //         </li>
+    //     );
+    // });
 
     return (
         <>

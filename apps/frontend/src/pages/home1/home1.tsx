@@ -1,5 +1,5 @@
 import './home1.css';
-import DocumentList from '../../components/DocumentList'
+import DocumentList from '../../components/doc-list'
 import SearchForm from '../../components/SearchForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';

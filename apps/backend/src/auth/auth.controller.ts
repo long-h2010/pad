@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { OAuth2Client } from 'google-auth-library';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 const client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID,
@@ -33,5 +34,14 @@ export class AuthController {
 
         const payload = ticket.getPayload();
         return this.authService.googleLogin(payload);
+    }
+
+    @Post('/forgot-password')
+    async forgotPassword(@Body(ValidationPipe) forgotPasswordDto: ForgotPasswordDto) {
+        try {
+            return this.authService.forgotPassword(forgotPasswordDto);
+        } catch (err: any) {
+            throw new Error(`Error at forgot password in auth controller: ${err}`);
+        }
     }
 }

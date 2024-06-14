@@ -58,8 +58,4 @@ export class UserService {
             throw new Error(`Error at change password in user service: ${err}`);
         }
     }
-
-    async forgotPassword() {
-
-    }
 }
