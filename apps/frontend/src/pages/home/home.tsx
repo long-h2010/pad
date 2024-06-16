@@ -1,63 +1,59 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faFolder } from '@fortawesome/free-solid-svg-icons';
-import SearchForm from '../../components/SearchForm';
-import DocumentList from '../../components/doc-list';
-import './home.css';
+import "./home.css";
+import * as React from "react";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import EditIcon from "@mui/icons-material/Edit";
+import PrimarySearchAppBar from "../../components/appbar";
+import DocumentList from "../../components/doc-list";
+import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
+import Box from "@mui/material/Box"; 
 
+const actions = [
+  { icon: <UploadFileOutlinedIcon />, name: "Import" },
+  { icon: <NoteAddOutlinedIcon />, name: "Add" },
+];
+
+function OpenIconSpeedDial() {
+  return (
+    <Box
+      sx={{
+        position: "fixed",
+        bottom: 20,
+        right: 20,
+        transform: "translateZ(0px)",
+        flexGrow: 1,
+      }}
+    >
+      <SpeedDial
+        ariaLabel="SpeedDial openIcon example"
+        icon={<SpeedDialIcon sx={{color: "black"}} openIcon={<EditIcon />} />}
+      >
+        {actions.map((action) => (
+          <SpeedDialAction
+            sx={{ backgroundColor: "white", color: "black" }}
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+          />
+        ))}
+      </SpeedDial>
+    </Box>
+  );
+}
 function Home() {
-    const token = localStorage.getItem('token');
-    const [documents, setDocuments] = useState([]);
-
-    useEffect(() => {
-        axios.get(import.meta.env.VITE_APP_DOCUMENTS_URL, { headers: { Authorization: `Bearer ${token}` } })
-            .then(res => {
-                setDocuments(res.data);
-            })
-            .catch(err => {
-                console.log('Error when retrieving document data: ', err);
-            })
-    }, []);
-
-    // const renderDocuments = documents.map(doc => {
-    //     return (
-    //         <li key={doc._id}>
-    //             <a href={`/document/${doc._id}`}>{doc.name}</a>
-    //         </li>
-    //     );
-    // });
-
-    return (
-        <>
-            <header id='docs-header'>
-                <div>
-                    <FontAwesomeIcon icon={faBars} className='docs__sidebar'/>
-                    <img src="https://www.gstatic.com/images/branding/product/1x/docs_2020q4_48dp.png" alt="Icon" className='docs__icon'/>
-                    <h3 className='docs__head'>Tài liệu</h3>
-                </div>
-                <SearchForm />
-                <div className='avatar'><img src='https://th.bing.com/th/id/OIP.7viG7KziuuP9ceZIvtnQawHaJ0?rs=1&pid=ImgDetMain' alt='Avatar' className='avatar__user'/></div>
-            </header>
-            <div id='docs-content'>
-                <div className='content-header'>
-                    <div>
-                        <h5 className='content-title'>Tài liệu gần đây</h5>
-                    </div>
-                    <div>
-                        <select className="form-select" style={{width: "80%", display: "inline"}} aria-label="Default select example">
-                            <option value="1">Do tôi sở hữu</option>
-                            <option value="2">Do mọi người sở hữu</option>
-                        </select>
-                        <FontAwesomeIcon icon={faFolder} className='docs__folder'/>
-                    </div>
-                </div>
-                <div className='content-body'>
-                    <DocumentList />
-                </div>
-            </div>
-        </>
-    )
+  return (
+    <main>
+      <header>
+        <PrimarySearchAppBar />
+      </header>
+      <div id="docs-content">
+        <DocumentList />
+      </div>
+      <OpenIconSpeedDial />
+    </main>
+  );
 }
 
-export default Home
+export default Home;

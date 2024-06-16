@@ -6,9 +6,8 @@ const AppContext = React.createContext<AppContextType | undefined>(undefined);
 interface Document {
     id: string;
     name: string;
-    // image: string;
-    // info: string;
-    // glass: string;
+    date: Date,
+    tag: Array<string>
 };
 
 interface AppContextType {
@@ -24,23 +23,27 @@ interface AppProviderProps {
 
 const AppProvider = ({ children }: AppProviderProps) => {
     const token = localStorage.getItem('token');
-    
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [documents, setDocuments] = useState<Document[]>([]);
 
     const fetchDocuments = useCallback(async () => {
         setLoading(true);
-
         try {
             axios.get(import.meta.env.VITE_APP_DOCUMENTS_URL, { headers: { Authorization: `Bearer ${token}` } })
                 .then(res => {
-                    setDocuments(res.data);
+                    const newListDocuments = res.data.map((document: any) => {
+                        const { _id, name, updatedAt, tag } = document;
+                        return { id: _id, name, date: updatedAt, tag };
+                });
+                    setDocuments(newListDocuments);
                 })
                 .catch(err => {
                     console.log('Error when fetch documents data: ', err);
                 })
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000)
         } catch (error) {
             console.log(error);
             setLoading(false);
@@ -48,7 +51,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     }, [searchTerm]);
 
     useEffect(() => {
-        fetchDocuments();
+      fetchDocuments();
     }, [searchTerm, fetchDocuments]);
 
     return (
