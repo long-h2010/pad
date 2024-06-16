@@ -1,4 +1,4 @@
-import Loading from "./loading";
+import Loading from "./Loading";
 import { useGlobalContext } from "../context";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid/Grid";
