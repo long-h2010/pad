@@ -12,12 +12,8 @@ export class DocumentController {
     @Get('')
     @UseGuards(AuthGuard)
     async findDocsOwner(@Request() req: any) {
-        try {
-            const user = req.user;
-            return this.docSevice.findDocsOwner(user.id);
-        } catch (err: any) {
-            throw new Error(`Error at find docs owner in document controller: ${err}`);
-        }
+        const user = req.user;
+        return this.docSevice.findDocsOwner(user.id);
     }
 
     @Post('create/:userId')

@@ -4,6 +4,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { OAuth2Client } from 'google-auth-library';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 const client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID,
@@ -33,15 +34,21 @@ export class AuthController {
         });
 
         const payload = ticket.getPayload();
-        return this.authService.googleLogin(payload);
+        return await this.authService.googleLogin(payload);
     }
 
     @Post('/forgot-password')
     async forgotPassword(@Body(ValidationPipe) forgotPasswordDto: ForgotPasswordDto) {
-        try {
-            return this.authService.forgotPassword(forgotPasswordDto);
-        } catch (err: any) {
-            throw new Error(`Error at forgot password in auth controller: ${err}`);
-        }
+        await this.authService.forgotPassword(forgotPasswordDto);
+    }
+
+    @Post('/verify-otp')
+    async verifyOtp(@Body(ValidationPipe) verifyOtpDto: VerifyOtpDto) {
+        return await this.authService.verifyOtp(verifyOtpDto);
+    }
+
+    @Post('/reset-password')
+    async resetPassword(@Body() username: string, newPassword: string) {
+        return await this.authService.resetPassword(newPassword);
     }
 }

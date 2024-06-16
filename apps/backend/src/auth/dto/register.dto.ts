@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Matches, MinLength } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
 
 export class RegisterDto {
     @IsNotEmpty()
@@ -9,6 +9,10 @@ export class RegisterDto {
     @IsString()
     @Matches(/^[a-zA-Z0-9]+$/, { message: 'Username cannot contain spaces or special characters' })
     readonly username: string;
+
+    @IsNotEmpty()
+    @IsEmail()
+    readonly email: string;
 
     @IsNotEmpty()
     @IsString()

@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { UserService } from 'src/user/user.service';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -68,13 +69,39 @@ export class AuthService {
         }
     }
 
+    generateOTP() { 
+        const digits = '0123456789'; 
+
+        let otp = ''; 
+        for (let i = 0; i < 4; i++) { 
+            otp += digits[Math.floor(Math.random() * digits.length)]; 
+        }
+         
+        return otp; 
+    } 
+
     async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+        const user = await this.userService.findByName(forgotPasswordDto.username);
+
+        const otp = this.generateOTP();
+        const otpExpiry = new Date(Date.now() + 60 * 1000);
+
+        await this.userService.update(user._id.toString(), { otp: otp, otpExpiry: otpExpiry });
+
         this.mailerService.sendMail({
-            to: forgotPasswordDto.email,
-            text: 'Hello',
-            html: '<b>Hello</b>'
+            to: user.email,
+            subject: 'OTP Code ✔',
+            text: otp,
         })
             .then(success => console.log(success))
             .catch(err => { throw new Error(`Error in send email: ${err}`) })
+    }
+
+    async verifyOtp(verifyOtpDto: VerifyOtpDto) {
+        return await this.userService.verifyOtp(verifyOtpDto.username, verifyOtpDto.otp)
+    }   
+
+    async resetPassword(newPassword: string) {
+
     }
 }

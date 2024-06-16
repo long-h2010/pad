@@ -11,8 +11,20 @@ export class User {
     @Prop()
     password: string;
 
+    @Prop()
+    email: string;
+
     @Prop({ default: '/img' })
     avatar: string;
+
+    @Prop()
+    otp: string;
+
+    @Prop()
+    otpExpiry: Date;
+
+    @Prop({ default: false })
+    isDeleted: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

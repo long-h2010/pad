@@ -25,13 +25,9 @@ export class UserController {
     @Post('/change-password')
     @UseGuards(AuthGuard)
     async changePassword(@Request() req: any, @Body() passwordData: any) {
-        try {
-            const user = req.user;
-            if (!user) throw new Error('Login data does not exist');
+        const user = req.user;
+        if (!user) throw new Error('Login data does not exist');
 
-            return this.userSevice.changePassword(user.id, passwordData);
-        } catch (err: any) {
-            throw new Error(`Error at change password in user controller: ${err}`);
-        }
+        return this.userSevice.changePassword(user.id, passwordData);
     }
 }

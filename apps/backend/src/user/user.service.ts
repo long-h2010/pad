@@ -30,6 +30,7 @@ export class UserService {
 
     async findByName(name: string) {
         const user = await this.userModel.findOne({ username: name });
+        if(!user) throw new BadRequestException('Username is not exists');
         return user;
     }
 
@@ -48,14 +49,26 @@ export class UserService {
     }
 
     async changePassword(id: string, passwordData: any) {
-        try {
-            const user = await this.findById(id);
+        const user = await this.findById(id);
+        if (user.password !== passwordData.password) throw new UnauthorizedException('Old password is incorrect!');
+        return await this.update(id, { password: passwordData.newPassword });
+    }
 
-            if (user.password !== passwordData.password) throw new UnauthorizedException('Old password is incorrect!');
-
-            return await this.update(id, { password: passwordData.newPassword });
-        } catch (err: any) {
-            throw new Error(`Error at change password in user service: ${err}`);
+    async verifyOtp(name: string, otp: string) {
+        const query = {
+            username: name,
+            otp: otp,
+            otpExpiry: { $gt: Date.now() }
         }
+
+        const user = await this.userModel.findOne(query);
+        if (!user) throw new BadRequestException('OTP is invalid or has expired');
+
+        return true;
+    }
+
+    async resetPassword(name: string, newPassword: string) {
+        const password = await bcrypt.hash(newPassword, 10);
+        await this.userModel.findOneAndUpdate({ username: name }, { password: password });
     }
 }

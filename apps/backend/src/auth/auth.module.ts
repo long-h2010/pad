@@ -22,16 +22,16 @@ import { MailerModule } from '@nestjs-modules/mailer';
     MailerModule.forRootAsync({
       useFactory: async () => ({
         transport: {
-          host: 'localhost',
-          port: 3000,
+          host: process.env.EMAIL_HOST,
+          port: process.env.EMAIL_PORT,
           secure: false,
           auth: {
             user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS
-          }
+            pass: process.env.EMAIL_PASS,
+          },
         },
-        default: {
-          from: 'No reply <Pad>'
+        defaults: {
+          from: 'No reply <Pad>',
         },
       }),
     }),
@@ -40,4 +40,4 @@ import { MailerModule } from '@nestjs-modules/mailer';
   controllers: [AuthController],
   providers: [AuthService, UserService],
 })
-export class AuthModule {}
+export class AuthModule { }
