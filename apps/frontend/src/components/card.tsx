@@ -101,7 +101,7 @@ const DocItem: React.FC<DocProps> = ({ id, name, date, tag }) => {
         overflow: "visible",
         border: "1px solid #dfe1e5",
         boxShadow: "none",
-        cursor: "pointer"
+        cursor: "pointer",
       }}
       key={id}
     >

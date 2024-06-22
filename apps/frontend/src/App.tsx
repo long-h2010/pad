@@ -4,7 +4,7 @@ import Login from './pages/login/login';
 import Document from './pages/document/document';
 import './App.css';
 import Profile from './pages/profile/profile';
-import MyEditor from './pages/editor/editor';
+import MyEditor from './pages/document/editor/editor';
 
 
 function App() {

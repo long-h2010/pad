@@ -12,6 +12,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 select.form-select {
@@ -26,7 +27,7 @@ select.form-select:focus {
 
 .grid-container {
     width: 80% !important;
-    margin: 10px;
+    margin: 0 !important;
 }
 .css-46bh2p-MuiCardContent-root:last-child {
     padding-bottom: 16px !important;
