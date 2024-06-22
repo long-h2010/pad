@@ -10,8 +10,8 @@ export class Document {
     @Prop()
     content: string;
 
-    @Prop([String])
-    tag: string[];
+    @Prop({type: [String], default: []})
+    tags: string[];
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
     owners: User[];

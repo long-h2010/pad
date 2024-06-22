@@ -6,8 +6,8 @@ const AppContext = React.createContext<AppContextType | undefined>(undefined);
 interface Document {
     id: string;
     name: string;
-    date: Date,
-    tag: Array<string>
+    date: Date;
+    tags: string[];
 };
 
 interface AppContextType {
@@ -33,8 +33,8 @@ const AppProvider = ({ children }: AppProviderProps) => {
             axios.get(import.meta.env.VITE_APP_DOCUMENTS_URL, { headers: { Authorization: `Bearer ${token}` } })
                 .then(res => {
                     const newListDocuments = res.data.map((document: any) => {
-                        const { _id, name, updatedAt, tag } = document;
-                        return { id: _id, name, date: updatedAt, tag };
+                        const { _id, name, updatedAt, tags } = document;
+                        return { id: _id, name, date: updatedAt, tags };
                 });
                     setDocuments(newListDocuments);
                 })

@@ -16,9 +16,17 @@ export class DocumentController {
         return this.docSevice.findDocsOwner(user.id);
     }
 
-    @Post('create/:userId')
-    async create(@Param('userId') userId: string, @Body(ValidationPipe) createDocDto: CreateDocumentDto) {
-        return this.docSevice.create(userId, createDocDto);
+    @Post('create')
+    @UseGuards(AuthGuard)
+    async create(@Request() req: any) {
+        const user = req.user;
+
+        const createDocDto: CreateDocumentDto = {
+            name: 'Tài liệu không có tiêu đề',
+            content: ''
+        }
+        
+        return this.docSevice.create(user.id, createDocDto);
     }
 
     @Get(':id')

@@ -1,10 +1,8 @@
-import { IsNotEmpty, MinLength } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateDocumentDto {
     @IsNotEmpty()
     name: string;
 
-    content: string;
-
-    tag?: string[];
+    content: string
 }

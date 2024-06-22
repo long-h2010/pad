@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, FormEvent } from 'react';
-import { useGlobalContext } from '../context';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
+import { useGlobalContext } from '../../context';
+import { Search } from '@mui/icons-material';
 
 const SearchForm: React.FC = () => {
     const { setSearchTerm } = useGlobalContext();
@@ -27,7 +26,7 @@ const SearchForm: React.FC = () => {
         <section className='section search' style={{ width: '80%', height: "45px" }}>
             <form className='search-form' onSubmit={handleSubmit}>
                 <div className='form-control' style={{ width: "100%", height: "100%" }}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ width: "5%", color: 'rgb(151, 151, 151)' }} />
+                    <Search />
                     <input
                         type='text'
                         placeholder='Tìm kiếm'

@@ -1,9 +1,15 @@
 {
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "devDependencies": {
     "turbo": "^1.13.3"
   },
   "scripts": {
     "dev": "turbo run dev"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2"
   }
 }

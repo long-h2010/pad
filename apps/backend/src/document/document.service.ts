@@ -14,12 +14,17 @@ export class DocumentService {
     ) {}
 
     async findDocsOwner(userId: string) {
-        return await this.docModel.find({ owners: userId });
+        const query = {
+            owners: userId,
+            isDeleted: false
+        };
+
+        return await this.docModel.find(query);
     }
 
     async findDocsShareWithMe(userId: string) {
-        const docsWriter = await this.docModel.find({ writers: userId });
-        const docsReader = await this.docModel.find({ readers: userId });
+        const docsWriter = await this.docModel.find({ writers: userId, isDeleted: false });
+        const docsReader = await this.docModel.find({ readers: userId, isDeleted: false });
         const docs = [...docsWriter, ...docsReader];
         return docs;
     }
