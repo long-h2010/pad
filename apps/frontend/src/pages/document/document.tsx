@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { debounce } from 'lodash';
 import MyEditor from './editor/editor';
-import Chat from './chat/chat';
 
 function Document() {
     const docId = useParams().id;
@@ -53,7 +52,6 @@ function Document() {
     return (
         <div id='container'>
             <MyEditor content={content} handleEditText={handleEditText} />
-            <Chat />
         </div>
     );
 }

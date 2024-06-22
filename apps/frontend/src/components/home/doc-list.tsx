@@ -33,12 +33,6 @@ function DocumentList() {
         laptop: 4,
     };
 
-    const rows = {
-        mobile: Math.ceil(documents.length / columnCounts.mobile),
-        tablet: Math.ceil(documents.length / columnCounts.tablet),
-        laptop: Math.ceil(documents.length / columnCounts.laptop),
-    };
-
     return (
         <ThemeProvider
             theme={createTheme({
@@ -52,54 +46,46 @@ function DocumentList() {
                 },
             })}
         >
-            {Array.from(Array(rows.laptop)).map((_, rowIndex) => (
-                <Grid
-                    key={rowIndex}
-                    container
-                    spacing={{ mobile: 1, tablet: 1, laptop: 2, desktop: 3 }}
-                    columns={12}
-                    className='grid-container'
-                >
-                    <div className='content-header'>
-                        <div>
-                            <h5 className='content-title' style={{ fontWeight: 500 }}>
-                                Tài liệu gần đây
-                            </h5>
-                        </div>
-                        <div style={{ display: 'flex' }}>
-                            <select
-                                className='form-select'
-                                style={{ display: 'inline', color: 'black' }}
-                                aria-label='Default select example'
-                            >
-                                <option value='1'>Do tôi sở hữu</option>
-                                <option value='2'>Do mọi người sở hữu</option>
-                            </select>
-                            <IconButton>
-                                <SortByAlpha />
-                            </IconButton>
-                        </div>
+            <Grid
+                container
+                spacing={{ mobile: 1, tablet: 1, laptop: 2, desktop: 3 }}
+                columns={12}
+                className="grid-container"
+            >
+                <div className="content-header">
+                    <div>
+                        <h5 className="content-title" style={{ fontWeight: 500 }}>
+                            Tài liệu gần đây
+                        </h5>
                     </div>
+                    <div style={{ display: "flex" }}>
+                        <select
+                            className="form-select"
+                            style={{ display: "inline", color: "black" }}
+                            aria-label="Default select example"
+                        >
+                            <option value="1">Do tôi sở hữu</option>
+                            <option value="2">Do mọi người sở hữu</option>
+                        </select>
+                        <IconButton>
+                            <SortByAlpha />
+                        </IconButton>
+                    </div>
+                </div>
 
-                    {documents
-                        .slice(
-                            rowIndex * columnCounts.laptop,
-                            (rowIndex + 1) * columnCounts.laptop
-                        )
-                        .map((document) => (
-                            <Grid
-                                item
-                                mobile={12 / columnCounts.mobile}
-                                tablet={12 / columnCounts.tablet}
-                                laptop={12 / columnCounts.laptop}
-                                key={document.id}
-                                sx={{ width: '100%' }}
-                            >
-                                <DocItem key={document.id} {...document} />
-                            </Grid>
-                        ))}
-                </Grid>
-            ))}
+                {documents.map((document) => (
+                    <Grid
+                        item
+                        mobile={12 / columnCounts.mobile}
+                        tablet={12 / columnCounts.tablet}
+                        laptop={12 / columnCounts.laptop}
+                        key={document.id}
+                        sx={{ width: "100%", padding: 2 }}
+                    >
+                        <DocItem key={document.id} {...document} />
+                    </Grid>
+                ))}
+            </Grid>
         </ThemeProvider>
     );
 }
