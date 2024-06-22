@@ -3,3 +3,6 @@ node_modules
 package-lock.json
 apps/backend/dist
 apps/frontend/node_modules
+package.json
+apps/frontend/package.json
+.gitignore
