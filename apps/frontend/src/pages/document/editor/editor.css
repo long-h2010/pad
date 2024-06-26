@@ -27,3 +27,18 @@
 .tox .tox-edit-area::before {
     border: none !important;
 }
+
+.list-user-title {
+    color: black;
+    font-weight: bold;
+}
+
+#docs-header {
+    padding: 10px;
+    padding-bottom: 0;
+}
+
+.input-doc-title {
+    font-size: 20px;
+    font-weight: bold;
+}

@@ -5,20 +5,6 @@ import DocItem from './doc-item';
 import { SortByAlpha } from '@mui/icons-material';
 import { Grid, IconButton } from '@mui/material';
 
-declare module '@mui/system' {
-    interface BreakpointOverrides {
-        laptop: true;
-        tablet: true;
-        mobile: true;
-        desktop: true;
-
-        xs: false;
-        sm: false;
-        md: false;
-        lg: false;
-        xl: false;
-    }
-}
 
 function DocumentList() {
     const { documents, loading } = useGlobalContext();
@@ -88,6 +74,21 @@ function DocumentList() {
             </Grid>
         </ThemeProvider>
     );
+}
+
+declare module '@mui/system' {
+    interface BreakpointOverrides {
+        laptop: true;
+        tablet: true;
+        mobile: true;
+        desktop: true;
+
+        xs: false;
+        sm: false;
+        md: false;
+        lg: false;
+        xl: false;
+    }
 }
 
 export default DocumentList

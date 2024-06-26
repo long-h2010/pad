@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";

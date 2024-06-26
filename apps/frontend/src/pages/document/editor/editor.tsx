@@ -1,103 +1,27 @@
 import { Editor } from "@tinymce/tinymce-react";
 import "./editor.css";
-import * as React from "react";
 import Input from "@mui/joy/Input";
-import GroupsIcon from "@mui/icons-material/Groups";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Badge from "@mui/material/Badge";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
+import HistoryIcon from '@mui/icons-material/History';
 import ToggleChat from "../../../components/document/toggle-chat";
-
-
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    backgroundColor: "#44b700",
-    color: "#44b700",
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    "&::after": {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      borderRadius: "50%",
-      animation: "ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
-      content: '""',
-    },
-  },
-  "@keyframes ripple": {
-    "0%": {
-      transform: "scale(.8)",
-      opacity: 1,
-    },
-    "100%": {
-      transform: "scale(2.4)",
-      opacity: 0,
-    },
-  },
-}));
-
-function BadgeAvatars() {
-  return (
-    <Stack direction="row" spacing={2}>
-      <StyledBadge
-        overlap="circular"
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        variant="dot"
-      >
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      </StyledBadge>
-    </Stack>
-  );
-}
+import ToggleListUser from "../../../components/document/toggle-list-users";
+import Button from "@mui/material/Button";
 
 function MyEditor(data: any) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
     <div id="container">
-      <div className="docs-header">
+      <div id="docs-header">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Input
             name="input-doc-title"
             variant="outlined"
             color="success"
-            sx={{ width: "30%", border: "none" }}
+            sx={{ width: "30%", border: "none", fontWeight: "bold", fontSize: 20}}
           />
           <div style={{ display: "flex" }}>
-            <IconButton
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            >
-              <GroupsIcon />
-            </IconButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem onClick={handleClose}>{BadgeAvatars()}Thao</MenuItem>
-              <MenuItem onClick={handleClose}>{BadgeAvatars()}Long</MenuItem>
-            </Menu>
+            <Button>
+              <HistoryIcon />
+            </Button>
+            <ToggleListUser />
             <ToggleChat />
           </div>
         </div>
