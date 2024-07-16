@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { AccountCircle, LockOutlined } from '@mui/icons-material';
 import { Input } from '@mui/joy';
-
 const SendOTP: React.FC<any> = (props) => {
     const classes = props.classes;
     const setUsername = props.setUsername;

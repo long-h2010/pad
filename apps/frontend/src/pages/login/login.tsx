@@ -53,6 +53,12 @@ function Login() {
 
     return (
         <Container sx={{ zIndex: 10}}>
+            <style>{`
+                .MuiInput-root.MuiInput-variantOutlined.MuiInput-colorNeutral.MuiInput-sizeMd.css-1fznubm-JoyInput-root-input.Mui-focused {
+                    border: "1px solid green !!important"
+                }
+            `}
+            </style>
             <Typography className={classes.link}>
                 <a href='/' style={{ color: '#66799e' }}>
                     <ArrowBackIosNew sx={{ fontSize: '12px', marginRight: '10px' }} />

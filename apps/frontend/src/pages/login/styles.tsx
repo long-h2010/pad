@@ -56,6 +56,9 @@ const LoginStyles = makeStyles()(() => {
             width: '100%',
             margin: '10px auto',
             backgroundColor: 'white',
+            "& .Mui-focused": {
+            color: "white"
+            },
         },
         subTitleSignup: {
             fontWeight: '600',
@@ -121,6 +124,25 @@ const LoginStyles = makeStyles()(() => {
             marginTop: '30px',
             color: '#66799e !important',
         },
+        alert: {
+            position: 'fixed',
+            width: "600px",
+            top: "-100px",
+            left: "50%",
+            border: "1px solid green",
+            transform: "translateX(-50%)",
+            transition: "top 0.5s ease-in-out",
+            "&.show": {
+                top: "140px"
+            }
+        },
+        error: {
+            display: "flex", 
+            alignItems: "center",
+            justifyContent: "center",
+            color: "red",
+            margin: "10px 0"
+        }
     };
 });
 
