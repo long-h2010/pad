@@ -1,0 +1,64 @@
+#docs-content {
+    width: fit-content;
+    padding-top: 50px;
+    margin: 0 auto !important;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+select.form-select {
+    border: none;
+    box-shadow: none;
+}
+
+select.form-select:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.grid-container {
+    width: 80% !important;
+    margin: 0 !important;
+}
+.css-46bh2p-MuiCardContent-root:last-child {
+    padding-bottom: 16px !important;
+}
+
+.docs-action {
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+}
+
+#root>div>main>div.MuiBox-root.css-19o4u0u>div>button {
+    background-color: white;
+}
+
+.hoverBox {
+    max-width: fit-content;
+    bottom: -60px;
+    right: -60px;
+}
+
+.docs-name {
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #000;
+}
+
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+    color: black !important;
+}

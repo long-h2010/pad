@@ -1,0 +1,44 @@
+.tox-tinymce {
+    height: 100% !important;
+    border: none !important;
+}
+
+.tox .tox-editor-container {
+    align-items: center;
+    height: max-content !important;
+    background: #dddddd;
+}
+
+.tox .tox-editor-header {
+    width: 100%;
+}
+
+.tox .tox-sidebar-wrap {
+    margin-top: 2% !important;
+    margin-bottom: 2% !important;
+}
+
+.tox .tox-edit-area {
+    width: 794px;
+    height: 1123px;
+    outline: 1px solid #c7c7c7;;
+}
+
+.tox .tox-edit-area::before {
+    border: none !important;
+}
+
+.list-user-title {
+    color: black;
+    font-weight: bold;
+}
+
+#docs-header {
+    padding: 10px;
+    padding-bottom: 0;
+}
+
+.input-doc-title {
+    font-size: 20px;
+    font-weight: bold;
+}

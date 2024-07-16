@@ -1,0 +1,20 @@
+body {
+  background: white;
+  margin: 0;
+  padding: 0 !important;
+  height: 100% !important;
+  width: 100%;
+  
+}
+
+#root {
+  margin: 0;
+  padding: 0 !important;
+  width: 100%;
+  max-width: 100% !important;
+}
+
+#container {
+  position: relative;
+  overflow: hidden;
+}
