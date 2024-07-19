@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -12,11 +12,13 @@ import Dashboard from '../../components/dashboard';
 import UsersGroup from './group/group-dashboard';
 import RightDrawer from '../../components/right-drawer';
 import Chat from './chat/chat';
+import { useGlobalContext } from '../../context';
 
 function Document() {
     const docId = useParams().id;
-    const doc_url = import.meta.env.VITE_APP_DOCUMENTS_URL;
+    const doc_url = useGlobalContext().doc_url;
     const socket = io('http://localhost:3000');
+    const editorRef = useRef(null);
     const [content, setContent] = useState('');
 
     useEffect(() => {
@@ -57,15 +59,13 @@ function Document() {
                 .catch((err) => {
                     console.log('Error when update documents data: ', err);
                 });
-        }, 1500),
-        []
-    );
+        }, 1200), 
+    []);
 
-    const handleEditText = async (html: string) => {
+    const handleEditText = debounce((html: string) => {
         setContent(html);
-        // updateDoc(html)
         socket.emit('edit', { content: html });
-    };
+    }, 0);
 
     return (
         <div id='container'>
@@ -93,6 +93,7 @@ function Document() {
             </div>
             <Editor
                 apiKey='tok1lhzg5h155ewt8cpsahu9pcvc5sh95ufqmjluksnky6ot'
+                onInit={(_evt, editor: any) => editorRef.current = editor}
                 init={{
                     plugins:
                         'fullscreen save pagebreak anchor preview autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
@@ -101,8 +102,8 @@ function Document() {
                     menubar: 'favs file edit view insert format tools table help',
                     fullscreen_native: true,
                 }}
-                value={content}
                 onEditorChange={handleEditText}
+                value={content}
             />
         </div>
     );

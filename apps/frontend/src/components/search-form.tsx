@@ -1,44 +1,43 @@
-import React, { useEffect, useRef, FormEvent } from 'react';
-import { useGlobalContext } from '../context';
-import { Search } from '@mui/icons-material';
+import React, { useEffect, useRef, FormEvent, useState } from "react";
+import { Input } from "@mui/joy";
+import GroupStyles from "../pages/document/group/style";
 
-const SearchForm: React.FC = () => {
-    const { setSearchTerm } = useGlobalContext();
-    const searchValue = useRef<HTMLInputElement>(null);
+interface SearchFormProps {
+  search: string;
+  setSearch: (value: string) => void;
+}
 
-    useEffect(() => {
-        if (searchValue.current) {
-            searchValue.current.focus();
-        }
-    }, []);
+const SearchForm: React.FC<SearchFormProps> = ({ search, setSearch }) => {
+  const { classes } = GroupStyles();
+  const searchValue = useRef<HTMLInputElement>(null);
 
-    const searchCocktail = () => {
-        if (searchValue.current) {
-            setSearchTerm(searchValue.current.value);
-        }
-    };
+  const searchUser = () => {
+    if (searchValue.current) {
+      const inputElement =
+        searchValue.current.querySelector<HTMLInputElement>("input");
+      if (inputElement) {
+        console.log(inputElement.value);
+        setSearch(inputElement.value);
+      }
+      
+    }
+  };
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-    };
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+  };
 
-    return (
-        <section className='section search' style={{ width: '80%', height: "45px" }}>
-            <form className='search-form' onSubmit={handleSubmit}>
-                <div className='form-control' style={{ width: "100%", height: "100%" }}>
-                    <Search />
-                    <input
-                        type='text'
-                        placeholder='Tìm kiếm'
-                        name='name'
-                        id='name'
-                        ref={searchValue}
-                        onChange={searchCocktail}
-                    />
-                </div>
-            </form>
-        </section>
-    );
+  return (
+    <form className="search-form" onSubmit={handleSubmit}>
+      <Input
+        className={classes.inputSearch}
+        variant="outlined"
+        placeholder="Nhập tên người dùng"
+        ref={searchValue}
+        onChange={searchUser}
+      />
+    </form>
+  );
 };
 
-export default SearchForm
+export default SearchForm;

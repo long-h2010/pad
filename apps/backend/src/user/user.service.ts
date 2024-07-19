@@ -6,6 +6,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UserService {
@@ -31,8 +32,9 @@ export class UserService {
         return user;
     }
 
-    async findAll() {
-        return await this.userModel.find();
+    async findUsersByNickName(nickname: string) {
+        const regex = RegExp(nickname, 'i');
+        return await this.userModel.find({ nickname: { $regex: regex } });
     }
 
     async findById(id: string) {
@@ -43,7 +45,6 @@ export class UserService {
 
     async findByName(name: string) {
         const user = await this.userModel.findOne({ username: name });
-        if (!user) throw new NotFoundException('User Not Found');
         return user;
     }
 
@@ -75,14 +76,19 @@ export class UserService {
             newData.password = hashedPassword;
         };
 
-        const user = await this.userModel.findByIdAndUpdate(id, newData);
-        return user;
+        await this.userModel.findByIdAndUpdate(id, newData);
+
+        return { message: 'Update successful' };
     }
 
-    async changePassword(id: string, passwordData: any) {
+    async changePassword(id: string, passwordData: ChangePasswordDto) {
         const user = await this.findById(id);
-        if (user.password !== passwordData.password) throw new UnauthorizedException('Old password is incorrect!');
-        return await this.update(id, { password: passwordData.newPassword });
+        if (!await bcrypt.compare(passwordData.oldPassword, user.password)) 
+            throw new UnauthorizedException('Old password is incorrect!');
+
+        await this.update(id, { password: passwordData.newPassword });
+
+        return { message: 'Change password successful' };
     }
 
     async verifyOtp(name: string, otp: string) {
