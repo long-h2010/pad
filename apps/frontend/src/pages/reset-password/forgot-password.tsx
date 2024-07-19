@@ -6,6 +6,7 @@ import SendOTP from './send-otp';
 import VerifyOTP from './verify-otp';
 import ResetPassword from './reset-password';
 import { useNavigate } from 'react-router-dom';
+import { Box, Container } from '@mui/material';
 
 function ForgotPassword() {
     const auth_url = useGlobalContext().auth_url;
@@ -22,7 +23,7 @@ function ForgotPassword() {
     const handleSendOtp = () => {
         axios
             .post(auth_url + 'forgot-password', { username: username })
-            .then(() => { 
+            .then(() => {
                 setSendOtpStatus(false);
                 setVerifyOtpStatus(true);
             })
@@ -31,7 +32,7 @@ function ForgotPassword() {
 
     const handleVerifyOtp = (pin: string) => {
         axios
-            .post(auth_url + 'verify-otp', { username: username, otp: pin})
+            .post(auth_url + 'verify-otp', { username: username, otp: pin })
             .then(() => {
                 setVerifyOtpStatus(false);
                 setResetPasswordStatus(true);
@@ -49,11 +50,17 @@ function ForgotPassword() {
     }
 
     return (
-        <>
-            {sendOtpStatus && (<SendOTP {...{ classes: classes, setUsername: setUsername, error: error, handleSendOtp: handleSendOtp }} />)}
-            {verifyOtpStatus && <VerifyOTP {...{ classes: classes, error: error, handleVerifyOtp: handleVerifyOtp }} />}
-            {resetPasswordStatus && <ResetPassword {...{ classes: classes, error: error, setPassword: setPassword, setConfirmPassword: setConfirmPassword, handleResetPassword: handleResetPassword }} />}
-        </>
+        <Container>
+            <Box className={classes.imageBackground}>
+                <Box className={classes.paper}>
+                    <Box>
+                        {sendOtpStatus && (<SendOTP {...{ classes: classes, setUsername: setUsername, error: error, handleSendOtp: handleSendOtp }} />)}
+                        {verifyOtpStatus && <VerifyOTP {...{ classes: classes, error: error, handleVerifyOtp: handleVerifyOtp }} />}
+                        {resetPasswordStatus && <ResetPassword {...{ classes: classes, error: error, setPassword: setPassword, setConfirmPassword: setConfirmPassword, handleResetPassword: handleResetPassword }} />}
+                    </Box>
+                </Box>
+            </Box>
+        </Container>
     );
 }
 

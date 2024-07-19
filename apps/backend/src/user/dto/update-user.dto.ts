@@ -11,6 +11,8 @@ export class UpdateUserDto {
     @IsNotEmpty()
     @IsString()
     @Matches(/^[a-zA-Z0-9]+$/, { message: 'Username cannot contain spaces or special characters' })
+    username?: string;
+
     nickname?: string;
 
     @MinLength(6, { message: 'Password must have at least 6 characters' })

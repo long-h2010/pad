@@ -12,6 +12,7 @@ interface Document {
 
 interface AppContextType {
     auth_url: string;
+    user_url: string;
     doc_url: string;
     loading: boolean;
     documents: Document[];
@@ -29,6 +30,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     const token = localStorage.getItem('token');
 
     const auth_url = import.meta.env.VITE_APP_AUTH_URL;
+    const user_url = import.meta.env.VITE_APP_USER_URL;
     const doc_url = import.meta.env.VITE_APP_DOCUMENTS_URL;
 
     const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     }, [searchTerm, fetchDocuments]);
 
     return (
-        <AppContext.Provider value={{ auth_url, doc_url, loading, documents, searchTerm, setSearchTerm, open, toggleDrawer }}>
+        <AppContext.Provider value={{ auth_url, user_url, doc_url, loading, documents, searchTerm, setSearchTerm, open, toggleDrawer }}>
             {children}
         </AppContext.Provider>
     );

@@ -2,19 +2,18 @@ import { Body, Controller, Get, Param, Post, Put, Request, UseGuards, Validation
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/utils/guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('user')
 export class UserController {
     constructor(private readonly userSevice: UserService) {}
-
     @Get('/')
-    async findAll() {
-        return this.userSevice.findAll();
-    }
+    @UseGuards(AuthGuard)
+    async findOne(@Request() req: any) {
+        const user = req.user;
+        if (!user) throw new Error('Login data does not exist');
 
-    @Get(':id')
-    async findOne(@Param('id') id: string) {
-        return this.userSevice.findById(id);
+        return this.userSevice.findById(user.id);
     }
 
     @Put(':id')    
@@ -22,11 +21,18 @@ export class UserController {
         return this.userSevice.update(id, updateData);
     }
 
+    @Get('/get-users/:nickname')
+    async findUsers(@Param('nickname') nickname: string) {
+        return this.userSevice.findUsersByNickName(nickname);
+    }
+
     @Post('/change-password')
     @UseGuards(AuthGuard)
-    async changePassword(@Request() req: any, @Body() passwordData: any) {
+    async changePassword(@Request() req: any) {
         const user = req.user;
         if (!user) throw new Error('Login data does not exist');
+
+        const passwordData: ChangePasswordDto = req.body.passwordData;
 
         return this.userSevice.changePassword(user.id, passwordData);
     }

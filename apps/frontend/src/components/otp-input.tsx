@@ -26,7 +26,6 @@ const OTPInput = ({ length = 4, onComplete }: InputProps) => {
     const inputRef = useRef<HTMLInputElement[]>(Array(length).fill(null));
 
     const [OTP, setOTP] = useState<string[]>(Array(length).fill(''));
-    console.log(OTP);
     const handleCompleteOTP = () => {
         for (let i = 0; i < OTP.length; i++) {
             if (OTP[i] == '') {
