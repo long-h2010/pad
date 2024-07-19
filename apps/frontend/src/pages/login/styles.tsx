@@ -7,7 +7,6 @@ const LoginStyles = makeStyles()(() => {
             position: 'absolute',
             top: '50%',
             left: '50%',
-            width: '80%',
             transform: 'translate(-50%, -50%)',
             backgroundRepeat: 'no-repeat !important',
             backgroundImage: `url(${BgImage})`,
@@ -36,7 +35,7 @@ const LoginStyles = makeStyles()(() => {
             borderRadius: '4px',
         },
         title: {
-            color: 'black',
+            color: 'rgb(38, 43, 64)',
             fontWeight: 'bold',
             textAlign: 'center',
         },
@@ -51,20 +50,6 @@ const LoginStyles = makeStyles()(() => {
             width: '100%',
             margin: '10px auto',
             backgroundColor: 'white',
-        },
-        inputSignup: {
-            width: '100%',
-            margin: '10px auto',
-            backgroundColor: 'white',
-            "& .Mui-focused": {
-            color: "white"
-            },
-        },
-        subTitleSignup: {
-            fontWeight: '600',
-            color: '#4a5073',
-            textAlign: 'left',
-            marginBottom: '10px',
         },
         btn: {
             width: '100%',
@@ -82,34 +67,22 @@ const LoginStyles = makeStyles()(() => {
         subtitleReset: {
             margin: '15px 0',
         },
-        btnSend: {
-            width: '100%',
-            marginTop: '10px',
-            background: '#37b85e',
-            padding: '10px',
-            textTransform: 'none',
-            '&:hover': {
-                backgroundColor: '#20c95b',
-                cursor: 'pointer',
-            },
-            fontWeight: 'bold',
-        },
-        number: {
-            border: '1px solid #ededed',
-            borderRadius: '5px',
-            width: '10px',
-            height: '10px',
-            padding: '10px',
-        },
         frameRemember: {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             marginTop: '20px',
         },
-        remember: {
+        condition: {
             display: 'flex',
             alignItems: 'center',
+        },
+        checkbox: {
+            paddingLeft: 0,
+            color: 'grey',
+            '&.Mui-checked': {
+                color: 'rgb(38, 43, 64)',
+            },
         },
         google: {
             display: 'flex',
@@ -119,10 +92,16 @@ const LoginStyles = makeStyles()(() => {
             margin: '20px',
             textAlign: 'center',
         },
-        link: {
+        boxLink: {
             textAlign: 'center',
             marginTop: '30px',
             color: '#66799e !important',
+        },
+        link: {
+            color: '#66799e', 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center" 
         },
         alert: {
             position: 'fixed',

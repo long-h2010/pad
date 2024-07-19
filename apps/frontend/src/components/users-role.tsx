@@ -12,7 +12,7 @@ const RoleOfUser: React.FC<any> = (props) => {
 
     return (
         <>
-            <Typography variant='h6'>{title}</Typography>
+            <Typography variant='h6' className={classes.titleRule}>{title}</Typography>
             <Box
                 className={classes.boxRule}
                 onDrop={(e) => handleOnDrop(e, role)}

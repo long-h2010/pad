@@ -5,10 +5,11 @@ function ListUser(data: any) {
     const owners = data.owners;
     const writers = data.writers;
     const readers = data.readers;
+    const classes = data.classes;
 
     return (
-        <>
-            <Typography variant='h6'>Người sở hữu</Typography>
+        <Box>
+            <Typography variant='h6' className={classes.titleRule}>Người sở hữu</Typography>
             <Box>
                 {Object.keys(owners).length !== 0 ? (
                     owners.map((user: any, index: number) => {
@@ -18,7 +19,7 @@ function ListUser(data: any) {
                     <></>
                 )}
             </Box>
-            <Typography variant='h6'>Người chỉnh sửa</Typography>
+            <Typography variant='h6' className={classes.titleRule}>Người chỉnh sửa</Typography>
             <Box>
                 {Object.keys(writers).length !== 0 ? (
                     writers.map((user: any, index: number) => {
@@ -29,7 +30,7 @@ function ListUser(data: any) {
                 )}
             </Box>
             <Divider />
-            <Typography variant='h6'>Người xem</Typography>
+            <Typography variant='h6' className={classes.titleRule}>Người xem</Typography>
             <Box>
                 {Object.keys(readers).length !== 0 ? (
                     readers.map((user: any, index: number) => {
@@ -39,7 +40,7 @@ function ListUser(data: any) {
                     <></>
                 )}
             </Box>
-        </>
+        </Box>
     );
 }
 

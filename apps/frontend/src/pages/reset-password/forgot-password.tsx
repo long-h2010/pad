@@ -7,6 +7,7 @@ import VerifyOTP from './verify-otp';
 import ResetPassword from './reset-password';
 import { useNavigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
+import LinkBack from '../../components/link-back';
 
 function ForgotPassword() {
     const auth_url = useGlobalContext().auth_url;
@@ -51,6 +52,7 @@ function ForgotPassword() {
 
     return (
         <Container>
+            <LinkBack classes= {classes} title={"loginpage"} href={'/login'}/>
             <Box className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>

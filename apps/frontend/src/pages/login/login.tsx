@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginStyles from './styles';
 import FieldInput from '../../components/field-input';
 import LinkLine from '../../components/link-line';
+import LinkBack from '../../components/link-back';
 
 function Login() {
     const navigateTo = useNavigate();
@@ -53,19 +54,8 @@ function Login() {
 
     return (
         <Container sx={{ zIndex: 10}}>
-            <style>{`
-                .MuiInput-root.MuiInput-variantOutlined.MuiInput-colorNeutral.MuiInput-sizeMd.css-1fznubm-JoyInput-root-input.Mui-focused {
-                    border: "1px solid green !!important"
-                }
-            `}
-            </style>
-            <Typography className={classes.link}>
-                <a href='/' style={{ color: '#66799e' }}>
-                    <ArrowBackIosNew sx={{ fontSize: '12px', marginRight: '10px' }} />
-                    Back to homepage
-                </a>
-            </Typography>
-            <Box className={classes.imageBackground}>
+            <LinkBack classes= {classes} title={"homepage"} href={'/'}/>
+            <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
                         <Typography className={classes.title} variant='h4'>
@@ -75,15 +65,9 @@ function Login() {
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Password', type: 'password', icon: <Lock className={classes.iconInput} />, placeholder: 'Enter your password', setElement: setPassword }} />
                         <p className='error'>{error}</p>
                         <Box className={classes.frameRemember}>
-                            <Box className={classes.remember}>
+                            <Box className={classes.condition}>
                                 <Checkbox
-                                    sx={{
-                                        paddingLeft: 0,
-                                        color: 'grey',
-                                        '&.Mui-checked': {
-                                            color: 'black',
-                                        },
-                                    }}
+                                    className={classes.checkbox}
                                 />
                                 <Typography sx={{ margin: 0 }} variant='subtitle2' gutterBottom>
                                     Remember me
@@ -133,7 +117,7 @@ function Login() {
                         <LinkLine {...{content: 'Not registered?', link: 'Create account', href: '/register'}} />
                     </Box>
                 </Box>
-            </Box>
+            </Container>
         </Container>
     );
 }

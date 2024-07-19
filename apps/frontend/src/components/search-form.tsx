@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, FormEvent, useState } from "react";
-import { Input } from "@mui/joy";
+import React, { useRef, FormEvent } from "react";
 import GroupStyles from "../pages/document/group/style";
+import { TextField } from "@mui/material";
 
 interface SearchFormProps {
-  search: string;
   setSearch: (value: string) => void;
 }
 
-const SearchForm: React.FC<SearchFormProps> = ({ search, setSearch }) => {
+const SearchForm: React.FC<SearchFormProps> = ({ setSearch }) => {
   const { classes } = GroupStyles();
   const searchValue = useRef<HTMLInputElement>(null);
 
@@ -16,7 +15,6 @@ const SearchForm: React.FC<SearchFormProps> = ({ search, setSearch }) => {
       const inputElement =
         searchValue.current.querySelector<HTMLInputElement>("input");
       if (inputElement) {
-        console.log(inputElement.value);
         setSearch(inputElement.value);
       }
       
@@ -29,13 +27,15 @@ const SearchForm: React.FC<SearchFormProps> = ({ search, setSearch }) => {
 
   return (
     <form className="search-form" onSubmit={handleSubmit}>
-      <Input
-        className={classes.inputSearch}
-        variant="outlined"
-        placeholder="Nhập tên người dùng"
-        ref={searchValue}
-        onChange={searchUser}
-      />
+      <TextField
+          id="outlined-multiline-flexible"
+          multiline
+          maxRows={1}
+          className={classes.inputSearch}
+          placeholder="Nhập tên người dùng"
+          ref={searchValue}
+          onChange={searchUser}
+        />
     </form>
   );
 };

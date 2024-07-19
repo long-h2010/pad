@@ -47,7 +47,7 @@ const ResetPassword: React.FC<any> = (props) => {
                 }}
             />
             <p className='error'>{error}</p>
-            <Button className={classes.btnSend} variant='contained' onClick={handleResetPassword}>
+            <Button className={classes.btn} variant='contained' onClick={handleResetPassword}>
                 Reset password
             </Button>
         </>

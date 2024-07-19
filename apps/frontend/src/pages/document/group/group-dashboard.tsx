@@ -16,6 +16,15 @@ import GroupStyles from "./style";
 import ListUser from "./list-user";
 import RoleOfUser from "../../../components/users-role";
 import SearchForm from "../../../components/search-form";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import ImageIcon from '@mui/icons-material/Image';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Test from "../../../components/test";
 
 function UsersGroup() {
   const { classes } = GroupStyles();
@@ -133,13 +142,22 @@ function UsersGroup() {
     fetchUser();
   }, [search, fetchUser]);
 
+  const [age, setAge] = useState<string | number>('owner');
+
+  const handleChange = (event: SelectChangeEvent<typeof age>) => {
+    setAge(event.target.value);
+  };
+
+
   return (
     <Box className={classes.boxContainer}>
-      <Box className={classes.boxFrame}>
-        <Typography variant="h5">Thêm người dùng mới</Typography>
-        <Button sx={{ color: "black" }} onClick={handleOpen}>
-          <Add sx={{ marginLeft: 2 }} />
-        </Button>
+        <Box sx={{display: "flex", justifyContent: "space-between"}}>
+          <Typography variant="h6" className={classes.headerTitle}>Thêm người dùng mới</Typography>
+          <Button sx={{ color: "green" }} onClick={handleOpen}>
+            <Add/>
+          </Button>
+        </Box>
+        <Test/>
         <Dialog
           open={open}
           onClose={handleClose}
@@ -148,35 +166,40 @@ function UsersGroup() {
         >
           <DialogTitle
             id="alert-dialog-title"
-            sx={{ fontWeight: "bold", fontSize: "22px" }}
           >
-            <Typography className={classes.headerTitle}>
+            <Typography className={classes.headerTitle} variant="h5">
               CHIA SẺ TÀI LIỆU
             </Typography>
           </DialogTitle>
           <DialogContent sx={{ display: "flex" }}>
-            <SearchForm search={search} setSearch={setSearch} />
-            <div>
-              {listUsers.map((user, index) => {
-                const { nickname } = user;
-                return <div key={index}>{nickname}</div>;
-              })}
-            </div>
-            <select
-              className="form-select"
-              style={{
-                display: "inline",
-                color: "rgb(50, 56, 62)",
-                fontWeight: "400",
-                width: 180,
-                border: "1px rgb(205, 215, 225) solid",
-                marginRight: 20,
-              }}
+            <SearchForm setSearch={setSearch} />
+            <List className={classes.listUser}>
+              <ListItem sx={{ padding: 0 }}>
+                <ListItemAvatar sx={{ display: "flex", justifyContent: "center" }}>
+                  <Avatar className={classes.avatarUser}>
+                    <ImageIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Thanh Thao" secondary="thaoyi" />
+              </ListItem>
+              <ListItem sx={{ padding: 0 }}>
+                <ListItemAvatar sx={{ display: "flex", justifyContent: "center" }}>
+                  <Avatar className={classes.avatarUser}>
+                    <ImageIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Thanh Thao" secondary="thaoyi" />
+              </ListItem>
+            </List>
+            <Select
+              labelId="demo-simple-select-helper-label"
+              id="demo-simple-select-helper"
+              value={age} className={classes.selectRule} onChange={handleChange}
             >
-              <option value="owner">Người chỉnh sửa</option>
-              <option value="writer">Người chỉnh sửa</option>
-              <option value="reader">Người xem</option>
-            </select>
+              <MenuItem value="owner">Người sở hữu</MenuItem>
+              <MenuItem value="writer">Người chỉnh sửa</MenuItem>
+              <MenuItem value="reader">Người xem</MenuItem>
+            </Select>
             <Button variant="outlined" color="success">
               Thêm
             </Button>
@@ -218,15 +241,14 @@ function UsersGroup() {
           </DialogContent>
           <DialogActions>
             <Button color="success" onClick={handleSave}>
-              Save
+              Cập nhật
             </Button>
             <Button color="success" onClick={handleCancel} autoFocus>
-              Cancel
+              Hủy
             </Button>
           </DialogActions>
         </Dialog>
-      </Box>
-      <ListUser owners={owners} writers={writers} readers={readers} />
+      <ListUser classes={classes} owners={owners} writers={writers} readers={readers} />
     </Box>
   );
 }

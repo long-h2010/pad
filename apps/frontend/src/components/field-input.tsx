@@ -32,6 +32,7 @@ const FieldInput: React.FC<any> = (props) => {
                 onChange={(e) => setElement(e.target.value)}
                 value={value}
             />
+            
         </>
     )
 }

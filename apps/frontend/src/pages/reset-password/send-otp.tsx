@@ -34,7 +34,7 @@ const SendOTP: React.FC<any> = (props) => {
             <p className='error'>{error}</p>
             <Button
                 type='button'
-                className={classes.btnSend}
+                className={classes.btn}
                 variant='contained'
                 onClick={handleSendOtp}
             >

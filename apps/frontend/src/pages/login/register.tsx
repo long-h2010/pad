@@ -6,6 +6,7 @@ import { AccountCircle, Email, Key } from '@mui/icons-material';
 import LoginStyles from './styles';
 import FieldInput from '../../components/field-input';
 import LinkLine from '../../components/link-line';
+import LinkBack from '../../components/link-back';
 
 function Register() {
     const navigateTo = useNavigate();
@@ -46,6 +47,7 @@ function Register() {
 
     return (
         <Container sx={{ zIndex: 10 }}>
+            <LinkBack classes= {classes} title={"loginpage"} href={'/login'}/>
             <Box className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
@@ -58,15 +60,9 @@ function Register() {
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Password', type: 'password', icon: <Key className={classes.iconInput} />, placeholder: 'Enter your password', setElement: setPassword }} />
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Comfirm password', type: 'password', icon: <Key className={classes.iconInput} />, placeholder: 'Enter confirm password', setElement: setConfirmPassword }} />
                         <p className='error'>{error}</p>
-                        <Box className={classes.remember}>
+                        <Box className={classes.condition}>
                             <Checkbox
-                                sx={{
-                                    paddingLeft: 0,
-                                    color: 'grey',
-                                    '&.Mui-checked': {
-                                        color: 'black',
-                                    },
-                                }}
+                                className={classes.checkbox}
                             />
                             <Typography sx={{ margin: 0 }} variant='subtitle2' gutterBottom>
                                 I agree to the terms and conditions

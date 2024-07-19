@@ -51,9 +51,14 @@ export const UserOnline: React.FC<any> = (props) => {
             >
                 <Avatar alt='avatar' src={avatar} />
             </StyledBadgeOnline>
-            <Typography variant='body1' ml={3}>
-                {name}
-            </Typography>
+            <Box>
+                <Typography variant='subtitle1' ml={3}>
+                    {name}
+                </Typography>
+                <Typography variant='body2' sx={{color: "rgba(0, 0, 0, 0.6)"}} ml={3}>
+                    thaoyi
+                </Typography>
+            </Box>
         </Box>
     );
 }
@@ -71,9 +76,14 @@ export const UserOffline: React.FC<any> = (props) => {
             >
                 <Avatar alt='avatar' src={avatar} />
             </StyledBadgeOffline>
-            <Typography variant='body1' ml={3}>
-                {name}
-            </Typography>
+            <Box>
+                <Typography variant='subtitle1' ml={3}>
+                    {name}
+                </Typography>
+                <Typography variant='body2' sx={{color: "rgba(0, 0, 0, 0.6)"}} ml={3}>
+                    thaoyi
+                </Typography>
+            </Box>
         </Box>
     );
 }
