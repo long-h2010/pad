@@ -27,6 +27,7 @@ const ProfileStyles = makeStyles()(() => {
         height: "100%",
         backgroundColor: "white",
         borderRadius: "10px 0 0 10px",
+        borderRight: "1px solid #d6d4d4"
       },
       paperRight: {
         float: "right",

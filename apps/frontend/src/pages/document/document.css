@@ -16,6 +16,7 @@
 .tox .tox-sidebar-wrap {
     margin-top: 2% !important;
     margin-bottom: 2% !important;
+    display: block
 }
 
 .tox .tox-edit-area {
@@ -41,4 +42,10 @@
 .input-doc-title {
     font-size: 20px;
     font-weight: bold;
+}
+
+.box {
+    width: 100px;
+    height: 100px;
+    background-color: aqua;
 }

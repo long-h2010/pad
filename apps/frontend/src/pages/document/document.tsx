@@ -65,9 +65,33 @@ function Document() {
         socket.emit('edit', { content: html });
     }, 0);
 
+    function myFunction() {
+
+        // Create an "li" node:
+        const node = document.createElement("li");
+        
+        // Create a text node:
+        const textnode = document.createTextNode("Water");
+        
+        // Append the text node to the "li" node:
+        node.appendChild(textnode);
+        
+        // Append the "li" node to the list:
+        const document1 = document.querySelector("#container");
+        const newElement = document.createElement('div');
+        newElement.textContent = 'New content';
+        newElement.className = 'tox-edit-area'
+        newElement.style.height = "500px"
+        
+        if (document1) {
+            (document1 as HTMLElement).appendChild(newElement);
+        }
+    }
+
     return (
         <div id='container'>
             <div id='docs-header'>
+            <button onClick={myFunction}>Append</button>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Input
                         name='input-doc-title'
