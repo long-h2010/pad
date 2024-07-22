@@ -4,13 +4,6 @@ import { Box, Card, CardContent, CardMedia, Chip, IconButton, ListItemIcon, Menu
 import { DeleteOutline, DriveFileRenameOutline, MoreVert, OpenInNew, SellOutlined } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
-interface DocProps {
-    id: string;
-    name: string;
-    date: Date;
-    tags: Array<string>;
-}
-
 const ITEM_HEIGHT = 48;
 function LongMenu() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -76,8 +69,11 @@ function LongMenu() {
     );
 }
 
-const DocItem: React.FC<DocProps> = ({ id, name, date, tags }) => {
-    const formattedDate = format(date, `d 'thg' MMMM, yyyy`);
+const DocItem: React.FC<any> = (props) => {
+    const id = props._id;
+    const name = props.name;
+    const date = format(props.updatedAt, `d 'thg' MMMM, yyyy`);
+    const tags = props.tags;
 
     return (
         <Card
@@ -118,7 +114,7 @@ const DocItem: React.FC<DocProps> = ({ id, name, date, tags }) => {
                             color='text.secondary'
                             sx={{ display: 'inline' }}
                         >
-                            {formattedDate}
+                            {date}
                         </Typography>
                     </div>
                     <div style={{ display: 'flex' }}>
@@ -140,7 +136,7 @@ const DocItem: React.FC<DocProps> = ({ id, name, date, tags }) => {
                                     spacing={1}
                                     sx={{ width: 90, maxWidth: 'fit-content' }}
                                 >
-                                    {tags.map((tag, index) => {
+                                    {tags.map((tag: string, index: number) => {
                                         return (
                                             <Chip
                                                 key={index}

@@ -7,10 +7,12 @@ import LoginStyles from './styles';
 import FieldInput from '../../components/field-input';
 import LinkLine from '../../components/link-line';
 import LinkBack from '../../components/link-back';
+import ErrorMessage from '../../components/error-message';
+import { useGlobalContext } from '../../context';
 
 function Register() {
     const navigateTo = useNavigate();
-    const auth_url = import.meta.env.VITE_APP_AUTH_URL;
+    const auth_url = useGlobalContext().auth_url;
     const { classes } = LoginStyles();
 
     const [name, setName] = useState('');
@@ -26,12 +28,19 @@ function Register() {
         if (password !== confirmPassword) {
             setError('Passwords doesn\'t match!');
         } else {
-            const signupData = {
+            const signupData: any = {
                 name: name,
                 username: username,
                 email: email,
                 password: password
             };
+
+            for (let i in signupData) {
+                if (signupData[i] === '') {
+                    setError(`Please enter your ${i}`);
+                    return;
+                } 
+            }
 
             axios
                 .post(auth_url + 'register', signupData)
@@ -47,7 +56,7 @@ function Register() {
 
     return (
         <Container sx={{ zIndex: 10 }}>
-            <LinkBack classes= {classes} title={"loginpage"} href={'/login'}/>
+            <LinkBack {...{ classes: classes, title: 'loginpage', href: '/login' }} />
             <Box className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
@@ -59,7 +68,7 @@ function Register() {
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Email', type: 'email', icon: <Email className={classes.iconInput} />, placeholder: 'Enter your email', setElement: setEmail }} />
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Password', type: 'password', icon: <Key className={classes.iconInput} />, placeholder: 'Enter your password', setElement: setPassword }} />
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Comfirm password', type: 'password', icon: <Key className={classes.iconInput} />, placeholder: 'Enter confirm password', setElement: setConfirmPassword }} />
-                        <p className='error'>{error}</p>
+                        {(error !== '') ? <ErrorMessage {...{ message: error }} /> : <></>}
                         <Box className={classes.condition}>
                             <Checkbox
                                 className={classes.checkbox}

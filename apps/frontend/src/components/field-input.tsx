@@ -3,14 +3,7 @@ import { Typography } from '@mui/material';
 import { Input } from '@mui/joy';
 
 const FieldInput: React.FC<any> = (props) => {
-    const classNameTitle = props.classNameTitle;
-    const classNameInput = props.classNameInput;
-    const title = props.title;
-    const type = props.type;
-    const icon = props.icon;
-    const value = props.value;
-    const placeholder = props.placeholder;
-    const setElement = props.setElement;
+    const { classNameTitle, classNameInput, title, type, icon, value, placeholder, setElement } = props;
 
     return (
         <>
@@ -32,7 +25,7 @@ const FieldInput: React.FC<any> = (props) => {
                 onChange={(e) => setElement(e.target.value)}
                 value={value}
             />
-            
+
         </>
     )
 }

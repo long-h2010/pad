@@ -2,9 +2,7 @@ import { ArrowBackIosNew } from "@mui/icons-material";
 import { Box } from "@mui/material";
 
 const LinkBack: React.FC<any> = (props) => {
-    const classes = props.classes;
-    const title = props.title;
-    const href = props.href;
+    const { classes, title, href } = props;
 
     return (
         <Box className={classes.boxLink}>

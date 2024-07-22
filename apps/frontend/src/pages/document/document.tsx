@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useGlobalContext } from '../../context';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -12,18 +13,17 @@ import Dashboard from '../../components/dashboard';
 import UsersGroup from './group/group-dashboard';
 import RightDrawer from '../../components/right-drawer';
 import Chat from './chat/chat';
-import { useGlobalContext } from '../../context';
 
 function Document() {
     const docId = useParams().id;
-    const doc_url = useGlobalContext().doc_url;
+    const { doc_url } = useGlobalContext();
     const socket = io('http://localhost:3000');
     const editorRef = useRef(null);
     const [content, setContent] = useState('');
 
     useEffect(() => {
         axios
-            .get(doc_url + docId)
+            .get(`${doc_url}/${docId}`)
             .then((res) => {
                 setContent(res.data.content);
             })
@@ -48,19 +48,17 @@ function Document() {
         };
     }, []);
 
-    const updateDoc = useCallback(
-        debounce((text) => {
-            axios
-                .put(doc_url + docId, { content: text })
-                .then((res) => {
-                    console.log(res);
-                    setContent(text);
-                })
-                .catch((err) => {
-                    console.log('Error when update documents data: ', err);
-                });
-        }, 1200), 
-    []);
+    const updateDoc = useCallback(debounce((text) => {
+        axios
+            .put(`${doc_url}/${docId}`, { content: text })
+            .then((res) => {
+                console.log(res);
+                setContent(text);
+            })
+            .catch((err) => {
+                console.log('Error when update documents data: ', err);
+            })
+    }, 1200), []);
 
     const handleEditText = debounce((html: string) => {
         setContent(html);

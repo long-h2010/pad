@@ -1,18 +1,19 @@
-import { Box, Button, Container, Checkbox, Typography } from '@mui/material';
-import { AccountCircle, ArrowBackIosNew, Lock } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import axios from 'axios';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useGlobalContext } from '../../context';
+import { Box, Button, Container, Checkbox, Typography } from '@mui/material';
+import { AccountCircle, Lock } from '@mui/icons-material';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import LoginStyles from './styles';
 import FieldInput from '../../components/field-input';
 import LinkLine from '../../components/link-line';
 import LinkBack from '../../components/link-back';
+import ErrorMessage from '../../components/error-message';
 
 function Login() {
     const navigateTo = useNavigate();
-    const auth_url = import.meta.env.VITE_APP_AUTH_URL;
+    const auth_url = useGlobalContext().auth_url;
     const { classes } = LoginStyles();
 
     const [username, setUsername] = useState('');
@@ -22,7 +23,14 @@ function Login() {
     const handleSubmitLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const loginData = { username: username, password: password };
+        const loginData: any = { username: username, password: password };
+
+        for (let i in loginData) {
+            if (loginData[i] === '') {
+                setError(`Please enter your ${i}`);
+                return;
+            } 
+        }
 
         axios
             .post(auth_url + 'login', loginData)
@@ -53,8 +61,8 @@ function Login() {
     };
 
     return (
-        <Container sx={{ zIndex: 10}}>
-            <LinkBack classes= {classes} title={"homepage"} href={'/'}/>
+        <Container sx={{ zIndex: 10 }}>
+            <LinkBack {...{ classes: classes, title: 'homepage', href: '/' }} />
             <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
@@ -63,7 +71,7 @@ function Login() {
                         </Typography>
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Username', type: 'text', icon: <AccountCircle className={classes.iconInput} />, placeholder: 'Enter your username', setElement: setUsername }} />
                         <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Password', type: 'password', icon: <Lock className={classes.iconInput} />, placeholder: 'Enter your password', setElement: setPassword }} />
-                        <p className='error'>{error}</p>
+                        {(error !== '') ? <ErrorMessage {...{ message: error }} /> : <></>}
                         <Box className={classes.frameRemember}>
                             <Box className={classes.condition}>
                                 <Checkbox
@@ -73,7 +81,6 @@ function Login() {
                                     Remember me
                                 </Typography>
                             </Box>
-
                             <Box>
                                 <Link to={'/reset-password'}>
                                     <Typography
@@ -86,7 +93,6 @@ function Login() {
                                 </Link>
                             </Box>
                         </Box>
-
                         <form onSubmit={handleSubmitLogin}>
                             <Button
                                 type='submit'
@@ -114,7 +120,7 @@ function Login() {
                                 />
                             </GoogleOAuthProvider>
                         </Box>
-                        <LinkLine {...{content: 'Not registered?', link: 'Create account', href: '/register'}} />
+                        <LinkLine {...{ content: 'Not registered?', link: 'Create account', href: '/register' }} />
                     </Box>
                 </Box>
             </Container>

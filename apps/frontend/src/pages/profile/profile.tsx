@@ -41,7 +41,7 @@ function a11yProps(index: number) {
 }
 
 function Profile() {
-    const user_url = useGlobalContext().user_url;
+    const { user_url } = useGlobalContext();
     const { classes } = ProfileStyles();
     const token = localStorage.getItem('token');
     const [value, setValue] = React.useState(0);
@@ -57,7 +57,7 @@ function Profile() {
     const [error, setError] = useState('');
 
     axios
-        .get(user_url, { headers: { Authorization: `Bearer ${token}` } })
+        .get(`${user_url}/`, { headers: { Authorization: `Bearer ${token}` } })
         .then((res) => {
             const user = res.data;
             setAvatar(user.avatar)
@@ -77,10 +77,22 @@ function Profile() {
         if (newPassword !== confirmNewPassword) {
             setError('New password and password confirm don\'t match!')
         } else {
+            const passwordData: any = {
+                oldPassword: oldPassword, 
+                newPassword: newPassword  
+            }
+
+            for (let i in passwordData) {
+                if (passwordData[i] === '') {
+                    setError(`Please enter your ${i}`);
+                    return;
+                } 
+            }
+
             axios
-                .post(user_url + 'change-password', { 
+                .post(`${user_url}/change-password`, { 
                     Authorization: `Bearer ${token}`, 
-                    passwordData: { oldPassword: oldPassword, newPassword: newPassword } 
+                    passwordData
                 })
                 .then((res) => console.log(res.data.message))
                 .catch((err) => setError(err.response.data.message))
@@ -98,7 +110,7 @@ function Profile() {
                         }
                     `}
                 </style>
-                <Box className={classes.frame}>
+                <Box>
                     <Box className={classes.paper}>
                         <Box className={classes.paperLeft}>
                             <Avatar

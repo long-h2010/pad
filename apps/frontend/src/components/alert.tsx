@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useStyles from '../pages/login/styles';
 import { Alert } from '@mui/material';
 
-function AlertMessage() {
+const AlertMessage = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [alertClass, setAlertClass] = useState('');
     const { classes } = useStyles();

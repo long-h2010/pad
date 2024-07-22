@@ -20,7 +20,7 @@ export class DocumentService {
             isDeleted: false
         };
 
-        return await this.docModel.find(query);
+        return await this.docModel.find(query).sort({ 'updatedAt': -1});
     }
 
     async findDocsShareWithMe(userId: string) {
@@ -79,8 +79,9 @@ export class DocumentService {
     }
 
     async update(id: string, updateDocDto: UpdateDocumentDto) {
-        const doc = await this.docModel.findByIdAndUpdate(id, updateDocDto);
-        return doc;
+        await this.findOne(id)
+        await this.docModel.findByIdAndUpdate(id, updateDocDto);
+        return { message: 'Update document successful' };
     }
 
     async addUsersRole(docId: string, role: string, addUsersDto: UsersRoleDto) {

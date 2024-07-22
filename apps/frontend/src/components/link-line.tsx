@@ -3,9 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const LinkLine: React.FC<any> = (props) => {
-    const content = props.content;
-    const link = props.link;
-    const href = props.href;
+    const { content, link, href } = props;
 
     return (
         <Box

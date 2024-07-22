@@ -114,13 +114,6 @@ const LoginStyles = makeStyles()(() => {
             "&.show": {
                 top: "140px"
             }
-        },
-        error: {
-            display: "flex", 
-            alignItems: "center",
-            justifyContent: "center",
-            color: "red",
-            margin: "10px 0"
         }
     };
 });

@@ -31,16 +31,40 @@ const StyledBadgeOnline = styled(Badge)(({ theme }) => ({
 }));
 
 const StyledBadgeOffline = styled(Badge)(({ theme }) => ({
-    "& .MuiBadge-badge": {
-        backgroundColor: "#BDBDBD",
-        color: "#BDBDBD",
+    '& .MuiBadge-badge': {
+        backgroundColor: '#BDBDBD',
+        color: '#BDBDBD',
         boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
     },
 }));
 
+export const User: React.FC<any> = (props) => {
+    const { avatar, name, nickname } = props;
+
+    const handleClick = () => {
+        props.onClick(props)
+    };
+
+    return (
+        <Box
+            sx={{ display: 'flex', alignItems: 'center', paddingBottom: 1 }}
+            onClick={handleClick}
+        >
+            <Avatar alt='avatar' src={avatar} />
+            <Box>
+                <Typography variant='subtitle1' ml={3}>
+                    {name}
+                </Typography>
+                <Typography variant='body2' sx={{ color: 'rgba(0, 0, 0, 0.6)' }} ml={3}>
+                    {nickname}
+                </Typography>
+            </Box>
+        </Box>
+    );
+}
+
 export const UserOnline: React.FC<any> = (props) => {
-    const name = props.name;
-    const avatar = props.avatar;
+    const { avatar, name, nickname } = props;
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', paddingBottom: 1 }}>
@@ -55,8 +79,8 @@ export const UserOnline: React.FC<any> = (props) => {
                 <Typography variant='subtitle1' ml={3}>
                     {name}
                 </Typography>
-                <Typography variant='body2' sx={{color: "rgba(0, 0, 0, 0.6)"}} ml={3}>
-                    thaoyi
+                <Typography variant='body2' sx={{ color: 'rgba(0, 0, 0, 0.6)' }} ml={3}>
+                    {nickname}
                 </Typography>
             </Box>
         </Box>
@@ -64,8 +88,7 @@ export const UserOnline: React.FC<any> = (props) => {
 }
 
 export const UserOffline: React.FC<any> = (props) => {
-    const name = props.name;
-    const avatar = props.avatar;
+    const { avatar, name, nickname } = props;
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', paddingBottom: 1 }}>
@@ -80,8 +103,8 @@ export const UserOffline: React.FC<any> = (props) => {
                 <Typography variant='subtitle1' ml={3}>
                     {name}
                 </Typography>
-                <Typography variant='body2' sx={{color: "rgba(0, 0, 0, 0.6)"}} ml={3}>
-                    thaoyi
+                <Typography variant='body2' sx={{ color: 'rgba(0, 0, 0, 0.6)' }} ml={3}>
+                    {nickname}
                 </Typography>
             </Box>
         </Box>

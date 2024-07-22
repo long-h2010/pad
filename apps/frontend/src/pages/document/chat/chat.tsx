@@ -94,28 +94,25 @@ const useStyles = makeStyles()(() => {
 function Chat() {
     const docId = useParams().id;
     const socket = io('http://localhost:3000');
-    const chat_url = import.meta.env.VITE_APP_CHATS_URL;
+    const { chat_url } = useGlobalContext();
     const { classes } = useStyles();
     const { open, toggleDrawer } = useGlobalContext();
     const [messages, setMessages] = useState({});
     const [message, setMessage] = useState('');
     const token: string = localStorage.getItem('token') || '';
     const decoded: any = jwtDecode(token);
+    let lastDate = '';
 
     useEffect(() => {
         axios
-            .get(chat_url + docId)
+            .get(`${chat_url}/${docId}`)
             .then((res) => {
                 if (res.data)
-                    setMessages(
-                        res.data.map((mess: any) => {
-                            return mess;
-                        })
-                    );
+                    setMessages(res.data);
             })
             .catch((err) => {
                 console.log('Error when retrieving chat data: ', err);
-            });
+            })
     }, []);
 
     useEffect(() => {
@@ -136,7 +133,7 @@ function Chat() {
     const handleSendMessage = (message: string) => {
         if (Object.keys(messages).length === 0)
             axios
-                .post(chat_url + docId, {
+                .post(`${chat_url}/${docId}`, {
                     Authorization: `Bearer ${token}`,
                     message: message,
                 })
@@ -145,10 +142,10 @@ function Chat() {
                 })
                 .catch((err) => {
                     console.log('Error when send message: ', err);
-                });
+                })
         else
             axios
-                .put(chat_url + docId, {
+                .put(`${chat_url}/${docId}`, {
                     Authorization: `Bearer ${token}`,
                     message: message,
                 })
@@ -157,7 +154,7 @@ function Chat() {
                 })
                 .catch((err) => {
                     console.log('Error when send message: ', err);
-                });
+                })
 
         setMessage('');
     };
@@ -171,8 +168,6 @@ function Chat() {
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
-
-    let lastDate = '';
 
     return (
         <Container className={classes.containerChat}>
@@ -236,6 +231,7 @@ function Chat() {
                         value={message}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && e.shiftKey === false) {
+                                e.preventDefault();
                                 handleSendMessage(message);
                             }
                         }}

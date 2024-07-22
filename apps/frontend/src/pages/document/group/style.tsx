@@ -5,7 +5,8 @@ const GroupStyles = makeStyles()(() => {
         headerTitle: {
             color: '#106b1f',
             fontWeight: 'bold',
-            textTransform: "uppercase"
+            textTransform: "uppercase",
+            fontSize: "20px"
         },
         boxContainer: {
             width: 360,
@@ -15,16 +16,11 @@ const GroupStyles = makeStyles()(() => {
         },
         boxRule: {
             display: 'flex',
-            height: 50,
+            minHeight: 50,
             maxHeight: 'fit-content',
             alignItems: 'center',
             paddingBottom: 1,
-        },
-        inputSearch: {
-            width: 250,
-            marginRight: "10px",
-            borderRadius: '4px',
-            backgroundColor: 'white',
+            margin: "0 10px"
         },
         listUser: {
             width: 250, 
@@ -46,6 +42,12 @@ const GroupStyles = makeStyles()(() => {
         titleRule: {
             fontWeight: 500,
             fontSize: "18px"
+        },
+        inputSearch: {
+            width: 250,
+            marginRight: '10px',
+            borderRadius: '4px',
+            backgroundColor: 'white',
         }
     };
 });
