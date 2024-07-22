@@ -138,7 +138,7 @@ function UsersGroup() {
     return (
         <Box className={classes.boxContainer}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant='h6' className={classes.headerTitle}>
+                <Typography variant='h6' sx={{fontSize: "20px !important"}} className={classes.headerTitle}>
                     Thêm người dùng mới
                 </Typography>
                 <Button sx={{ color: 'green' }} onClick={handleOpen}>
@@ -175,7 +175,7 @@ function UsersGroup() {
                         <MenuItem value='writer'>Người chỉnh sửa</MenuItem>
                         <MenuItem value='reader'>Người xem</MenuItem>
                     </Select>
-                    <Button variant='outlined' color='success' onClick={handleAddUser}>
+                    <Button variant='outlined' sx={{height: "56px"}} color='success' onClick={handleAddUser}>
                         Thêm
                     </Button>
                 </DialogContent>

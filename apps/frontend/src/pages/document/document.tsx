@@ -1,134 +1,202 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useGlobalContext } from '../../context';
-import { io } from 'socket.io-client';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { debounce } from 'lodash';
-import { Input } from '@mui/joy';
-import { Button } from '@mui/material';
-import { Groups, History } from '@mui/icons-material';
-import { Editor } from '@tinymce/tinymce-react';
-import './document.css';
-import Dashboard from '../../components/dashboard';
-import UsersGroup from './group/group-dashboard';
-import RightDrawer from '../../components/right-drawer';
-import Chat from './chat/chat';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useGlobalContext } from "../../context";
+import { io } from "socket.io-client";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { debounce } from "lodash";
+import { Input } from "@mui/joy";
+import { Button } from "@mui/material";
+import { Groups, History } from "@mui/icons-material";
+import { Editor } from "@tinymce/tinymce-react";
+import "./document.css";
+import Dashboard from "../../components/dashboard";
+import UsersGroup from "./group/group-dashboard";
+import RightDrawer from "../../components/right-drawer";
+import Chat from "./chat/chat";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 function Document() {
-    const docId = useParams().id;
-    const { doc_url } = useGlobalContext();
-    const socket = io('http://localhost:3000');
-    const editorRef = useRef(null);
-    const [content, setContent] = useState('');
+  const docId = useParams().id;
+  const { doc_url } = useGlobalContext();
+  const socket = io("http://localhost:3000");
+  const editorRef = useRef(null);
+  const [content, setContent] = useState("");
+  const [name, setName] = useState("");
 
-    useEffect(() => {
-        axios
-            .get(`${doc_url}/${docId}`)
-            .then((res) => {
-                setContent(res.data.content);
-            })
-            .catch((err) => {
-                console.log('Error when retrieving documents data: ', err);
-            })
-    }, []);
+  useEffect(() => {
+    axios
+      .get(`${doc_url}/${docId}`)
+      .then((res) => {
+        setName(res.data.name);
+        setContent(res.data.content);
+      })
+      .catch((err) => {
+        console.log("Error when retrieving documents data: ", err);
+      });
+  }, []);
 
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Connected');
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected");
+    });
+
+    socket.on("updateText", (data) => {
+      setContent(data);
+      updateDoc(data);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("updateText");
+    };
+  }, []);
+
+  const updateDoc = useCallback(
+    debounce((text) => {
+      axios
+        .put(`${doc_url}/${docId}`, { content: text })
+        .then((res) => {
+          console.log(res);
+          setContent(text);
+        })
+        .catch((err) => {
+          console.log("Error when update documents data: ", err);
         });
+    }, 1200),
+    []
+  );
 
-        socket.on('updateText', (data) => {
-            setContent(data);
-            updateDoc(data);
+  const handleEditText = debounce((html: string) => {
+    setContent(html);
+    socket.emit("edit", { content: html });
+  }, 0);
+
+  const downloadPDF = () => {
+    if (editorRef.current) {
+      const input = editorRef.current.contentDocument.activeElement as HTMLElement;
+      if (input) {
+        html2canvas(input).then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("p", "mm", "a4", true);
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          const imgWidth = canvas.width;
+          const imgHeight = canvas.height;
+          const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+          const imgX = (pdfWidth - imgWidth * ratio) / 2;
+          const imgY = 30;
+          pdf.addImage(
+            imgData,
+            "PNG",
+            imgX,
+            imgY,
+            imgWidth * ratio,
+            imgHeight * ratio
+          );
+          pdf.save(`${name}.pdf`);
         });
-
-        return () => {
-            socket.off('connect');
-            socket.off('updateText');
-        };
-    }, []);
-
-    const updateDoc = useCallback(debounce((text) => {
-        axios
-            .put(`${doc_url}/${docId}`, { content: text })
-            .then((res) => {
-                console.log(res);
-                setContent(text);
-            })
-            .catch((err) => {
-                console.log('Error when update documents data: ', err);
-            })
-    }, 1200), []);
-
-    const handleEditText = debounce((html: string) => {
-        setContent(html);
-        socket.emit('edit', { content: html });
-    }, 0);
-
-    function myFunction() {
-
-        // Create an "li" node:
-        const node = document.createElement("li");
-        
-        // Create a text node:
-        const textnode = document.createTextNode("Water");
-        
-        // Append the text node to the "li" node:
-        node.appendChild(textnode);
-        
-        // Append the "li" node to the list:
-        const document1 = document.querySelector("#container");
-        const newElement = document.createElement('div');
-        newElement.textContent = 'New content';
-        newElement.className = 'tox-edit-area'
-        newElement.style.height = "500px"
-        
-        if (document1) {
-            (document1 as HTMLElement).appendChild(newElement);
-        }
+      }
     }
+  };
 
-    return (
-        <div id='container'>
-            <div id='docs-header'>
-            <button onClick={myFunction}>Append</button>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Input
-                        name='input-doc-title'
-                        variant='outlined'
-                        color='success'
-                        sx={{
-                            width: '30%',
-                            border: 'none',
-                            fontWeight: 'bold',
-                            fontSize: 20,
-                        }}
-                    />
-                    <div style={{ display: 'flex' }}>
-                        <Button>
-                            <History />
-                        </Button>
-                        <Dashboard {...{ iconButton: <Groups />, element: <UsersGroup /> }} />
-                        <RightDrawer {...{ element: <Chat /> }} />
-                    </div>
-                </div>
-            </div>
-            <Editor
-                apiKey='tok1lhzg5h155ewt8cpsahu9pcvc5sh95ufqmjluksnky6ot'
-                onInit={(_evt, editor: any) => editorRef.current = editor}
-                init={{
-                    plugins:
-                        'fullscreen save pagebreak anchor preview autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
-                    toolbar:
-                        'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags pagebreak | spellcheckdialog typography | alignleft aligncenter alignright alignjustify lineheight | checklist numlist bullist indent outdent | emoticons charmap | fullscreen removeformat preview save',
-                    menubar: 'favs file edit view insert format tools table help',
-                    fullscreen_native: true,
-                }}
-                onEditorChange={handleEditText}
-                value={content}
+  function myFunction() {
+    // Create an "li" node:
+    const node = document.createElement("li");
+
+    // Create a text node:
+    const textnode = document.createTextNode("Water");
+
+    // Append the text node to the "li" node:
+    node.appendChild(textnode);
+
+    // Append the "li" node to the list:
+    const document1 = document.querySelector("#container");
+    const newElement = document.createElement("div");
+    newElement.textContent = "New content";
+    newElement.className = "tox-edit-area";
+    newElement.style.height = "500px";
+
+    if (document1) {
+      (document1 as HTMLElement).appendChild(newElement);
+    }
+  }
+
+  const addContent = () => {
+    if (editorRef.current) {
+        console.log(editorRef.current)
+        const input = document.querySelector(".tox-sidebar-wrap");
+        if(input) {
+            input.style.display = "block";
+        }
+      if (input) {
+        const newIframe = document.createElement("div");
+        newIframe.className = "tox-edit-area";
+        newIframe.style.height = "1123px"
+        newIframe.style.width = "794px";
+        console.log(newIframe)
+        input.appendChild(newIframe);
+        
+      }
+    }
+  };
+
+  return (
+    <div id="container">
+      <div id="docs-header">
+        <button onClick={addContent}>Append</button>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Input
+            name="input-doc-title"
+            variant="outlined"
+            color="success"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{
+              width: "30%",
+              border: "none",
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          />
+          <div style={{ display: "flex" }}>
+            <Button>
+              <History />
+            </Button>
+            <Dashboard
+              {...{ iconButton: <Groups />, element: <UsersGroup /> }}
             />
+            <RightDrawer {...{ element: <Chat /> }} />
+          </div>
         </div>
-    );
+      </div>
+      <Editor
+        apiKey="tok1lhzg5h155ewt8cpsahu9pcvc5sh95ufqmjluksnky6ot"
+        onInit={(_evt, editor: any) => (editorRef.current = editor)}
+        init={{
+          plugins:
+            "fullscreen save pagebreak anchor preview autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker code",
+          toolbar:
+            "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags pagebreak | spellcheckdialog typography | alignleft aligncenter alignright alignjustify lineheight | checklist numlist bullist indent outdent | emoticons charmap PDF | fullscreen removeformat preview save code",
+          menubar: "favs file edit view insert format tools table help",
+          fullscreen_native: true,
+          pagebreak_split_block: true,
+          pagebreak_separator:
+            "<div style='page-break-before: always; clear:both'/></div>",
+          setup: (editor) => {
+            editor.ui.registry.addButton("PDF", {
+              icon: "export-pdf",
+              onAction: () => {
+                downloadPDF();
+              },
+            });
+          },
+        }}
+        onEditorChange={handleEditText}
+        value={content}
+      />
+    </div>
+  );
 }
 
 export default Document;
