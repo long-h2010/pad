@@ -53,7 +53,7 @@ function ForgotPassword() {
     return (
         <Container>
             <LinkBack classes= {classes} title={"loginpage"} href={'/login'}/>
-            <Box className={classes.imageBackground}>
+            <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
                         {sendOtpStatus && (<SendOTP {...{ classes: classes, setUsername: setUsername, error: error, handleSendOtp: handleSendOtp }} />)}
@@ -61,7 +61,7 @@ function ForgotPassword() {
                         {resetPasswordStatus && <ResetPassword {...{ classes: classes, error: error, setPassword: setPassword, setConfirmPassword: setConfirmPassword, handleResetPassword: handleResetPassword }} />}
                     </Box>
                 </Box>
-            </Box>
+            </Container>
         </Container>
     );
 }

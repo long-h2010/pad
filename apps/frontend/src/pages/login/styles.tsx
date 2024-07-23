@@ -11,6 +11,7 @@ const LoginStyles = makeStyles()(() => {
             backgroundRepeat: 'no-repeat !important',
             backgroundImage: `url(${BgImage})`,
             minHeight: '600px',
+            height: "fit-content"
         },
         iconInput: {
             fontSize: '18px',

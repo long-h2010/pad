@@ -57,7 +57,7 @@ function Register() {
     return (
         <Container sx={{ zIndex: 10 }}>
             <LinkBack {...{ classes: classes, title: 'loginpage', href: '/login' }} />
-            <Box className={classes.imageBackground}>
+            <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
                         <Typography className={classes.title} variant='h4'>
@@ -89,7 +89,7 @@ function Register() {
                         <LinkLine {...{ content: 'Already have an account?', link: 'Login here', href: '/login' }} />
                     </Box>
                 </Box>
-            </Box>
+            </Container>
         </Container>
     );
 }
