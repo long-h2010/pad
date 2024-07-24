@@ -25,7 +25,6 @@ function Document() {
     const editorRef = useRef(null);
     const [content, setContent] = useState("");
     const [name, setName] = useState("");
-
     useEffect(() => {
         axios
             .get(`${doc_url}/${docId}`)
@@ -130,7 +129,6 @@ function Document() {
 
     const addContent = () => {
         if (editorRef.current) {
-            console.log(editorRef.current)
             const input = document.querySelector(".tox-sidebar-wrap");
             if (input) {
                 input.style.display = "block";
@@ -154,7 +152,7 @@ function Document() {
         <div id="container">
             <div id="docs-header">
                 <button onClick={addContent}>Append</button>
-                <TableOfContent />
+                
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <Input
                         name="input-doc-title"
@@ -180,6 +178,8 @@ function Document() {
                     </div>
                 </div>
             </div>
+            <TableOfContent content={content} editorRef={editorRef}/>
+
             <Editor
                 apiKey="aejb5qweihjrg4au7khd60k41jslrwbqrf00cr9vg6q28jcy"
                 onInit={(_evt, editor: any) => (editorRef.current = editor)}
@@ -191,7 +191,7 @@ function Document() {
                     menubar: "favs file edit view insert format tools table help",
                     fullscreen_native: true,
                     pagebreak_split_block: true,
-                    content_style: 'body { overflow-y: hidden !important; } div { margin: 10px; border: 5px solid red; padding: 3px; }',
+                    content_style: 'body {} div { margin: 10px; border: 5px solid red; padding: 3px; }',
                     setup: (editor) => {
                         editor.ui.registry.addButton("PDF", {
                             icon: "export-pdf",
@@ -209,7 +209,6 @@ function Document() {
                 }}
                 onEditorChange={handleEditText}
                 value={content}
-
             />
         </div>
     );
