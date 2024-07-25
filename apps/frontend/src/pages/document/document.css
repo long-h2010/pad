@@ -6,7 +6,7 @@
 .tox .tox-editor-container {
     align-items: center;
     height: max-content !important;
-    background: #dddddd;
+    background-color: white;
 }
 
 .tox .tox-editor-header {
@@ -16,7 +16,7 @@
 .tox .tox-sidebar-wrap {
     margin-top: 2% !important;
     margin-bottom: 2% !important;
-    display: block
+    display: block;
 }
 
 .tox .tox-edit-area {

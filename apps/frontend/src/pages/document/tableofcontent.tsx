@@ -13,7 +13,7 @@ const TableOfContent: React.FC<any> = (props) => {
   const content = props.content;
   const editorRef = props.editorRef;
   const refContent = useRef<HTMLIFrameElement>(null);
-  
+  const [contentDocument, setContentDocument] = useState<Document | null>(null);
 
   useEffect(() => {
     refContent.current = editorRef.current;
@@ -23,6 +23,7 @@ const TableOfContent: React.FC<any> = (props) => {
     const checkContentDocument = () => {
       if (refContent.current && refContent.current.contentDocument) {
         const contentDocument = refContent.current.contentDocument;
+        setContentDocument(contentDocument);
         if (contentDocument) {
           const elements = Array.from(contentDocument.querySelectorAll<HTMLElement>("h2, h3, h4"))
             .map((elem, index) => ({
@@ -56,9 +57,20 @@ const TableOfContent: React.FC<any> = (props) => {
 
   const { activeId } = useHeadsObserver();
 
+  const scrollElement = (e: any, id: String) => {
+    e.preventDefault();
+    if (contentDocument) {
+      contentDocument.querySelector(`#${id}`)?.scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+  }
+
   return (
     <nav>
+      {headings.length > 0 && (<h5 style={{ color: "black", fontWeight: "bold" }}>Table of contents</h5>)}
       <ul>
+
         {headings.map(heading => (
           <li
             key={heading.id}
@@ -68,10 +80,7 @@ const TableOfContent: React.FC<any> = (props) => {
               style={{ fontWeight: activeId === heading.id ? "bold" : "normal" }}
               href={`#${heading.id}`}
               onClick={(e) => {
-                e.preventDefault();
-                document.querySelector(`#${heading.id}`)?.scrollIntoView({
-                  behavior: "smooth"
-                });
+                scrollElement(e, heading.id)
               }}
             >
               {heading.text}
