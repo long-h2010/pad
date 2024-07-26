@@ -70,7 +70,6 @@ const TableOfContent: React.FC<any> = (props) => {
     <nav>
       {headings.length > 0 && (<h5 style={{ color: "black", fontWeight: "bold" }}>Table of contents</h5>)}
       <ul>
-
         {headings.map(heading => (
           <li
             key={heading.id}

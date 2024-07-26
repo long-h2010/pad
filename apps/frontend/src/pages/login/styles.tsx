@@ -104,18 +104,6 @@ const LoginStyles = makeStyles()(() => {
             justifyContent: "center", 
             alignItems: "center" 
         },
-        alert: {
-            position: 'fixed',
-            width: "600px",
-            top: "-100px",
-            left: "50%",
-            border: "1px solid green",
-            transform: "translateX(-50%)",
-            transition: "top 0.5s ease-in-out",
-            "&.show": {
-                top: "140px"
-            }
-        }
     };
 });
 

@@ -9,7 +9,7 @@ const RightDrawer: React.FC<any> = (props) => {
     return (
         <>
             <Button onClick={() => toggleDrawer(!open)}>
-                <MessageOutlined />
+                <MessageOutlined sx={{color: "rgb(34, 47, 62)"}}/>
             </Button>
             <Drawer open={open} anchor='right' onClose={() => toggleDrawer(!open)}>
                 {props.element}

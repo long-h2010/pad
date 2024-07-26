@@ -34,18 +34,46 @@
     font-weight: bold;
 }
 
-#docs-header {
-    padding: 10px;
-    padding-bottom: 0;
+.tox-statusbar__text-container {
+    display: none !important;
+}
+/* 
+.tox .tox-button { 
+    background-color: rgb(255, 255, 255) !important;
+    border-color: green !important;
+    color: green;
+} */
+
+.dialog.open {
+    background-color: white;
+    border-color: #eee;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 0;
+    box-shadow: 0 16px 16px -10px rgba(34, 47, 62, .15), 0 0 40px 1px rgba(34, 47, 62, .15);
+    max-height: 100%;
+    max-width: 480px;
+    right: 180px;
+    overflow: hidden;
+    position: absolute;
+    width: 350px;
+    height: fit-content;
+    z-index: 1000;
+    padding: 20px;
+    display: block;
 }
 
-.input-doc-title {
-    font-size: 20px;
-    font-weight: bold;
+.dialog {
+    display: none;
 }
 
-.box {
-    width: 100px;
-    height: 100px;
-    background-color: aqua;
+.icon {
+    display: none;
+}
+
+.icon.open {
+    display: block;
+    position: absolute;
+    right: 530px;
+    z-index: 100;
 }

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { debounce } from "lodash";
 import { Input } from "@mui/joy";
-import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TextField, Typography } from "@mui/material";
 import { Groups, History } from "@mui/icons-material";
 import { Editor } from "@tinymce/tinymce-react";
 import "./document.css";
@@ -17,8 +17,10 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import TableOfContent from "./tableofcontent";
 import SignatureCanvas from "react-signature-canvas";
-import './signature.css'
 import React from "react";
+import DocumentStyles from "./styles";
+import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
+import ReactDOM from "react-dom";
 
 function Document() {
     const docId = useParams().id;
@@ -27,6 +29,8 @@ function Document() {
     const editorRef = useRef(null);
     const [content, setContent] = useState("");
     const [name, setName] = useState("");
+    const { classes } = DocumentStyles();
+
     useEffect(() => {
         axios
             .get(`${doc_url}/${docId}`)
@@ -128,21 +132,15 @@ function Document() {
         }
     }
 
-
     // const addContent = () => {
     //     if (editorRef.current) {
-    //         const input = document.querySelector(".tox-sidebar-wrap");
+    //         const input = document.querySelector(".tox-dialog__body-content");
     //         if (input) {
-    //             input.style.display = "block";
-    //         }
-    //         if (input) {
-    //             const newDiv = document.createElement("textarea");
+    //             const newDiv = document.createElement("div");
     //             newDiv.className = "tox-edit-area";
-    //             newDiv.style.height = "1123px"
-    //             newDiv.style.width = "794px";
-    //             newDiv.style.backgroundColor = "white"
-    //             const newTextarea = document.createElement("textarea");
-    //             newDiv.appendChild(newTextarea);
+    //             newDiv.style.height = "10px"
+    //             newDiv.style.width = "10px";
+    //             newDiv.style.backgroundColor = "blue"
     //             input.appendChild(newDiv);
 
     //         }
@@ -150,14 +148,14 @@ function Document() {
     // };
 
     const useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const [open, setOpen] = React.useState(false);
+    const [openSign, setOpenSign] = useState(false);
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setOpenSign(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        setOpenSign(false);
     };
 
     const sigCanvas = useRef(null)
@@ -166,18 +164,18 @@ function Document() {
 
     const [imageURL, setImageURL] = useState('');
 
-    const download = () => {
+    const downloadSign = () => {
         const dlink = document.createElement("a");
         dlink.setAttribute("href", imageURL);
         dlink.setAttribute("download", "signature.png");
         dlink.click();
     };
 
-    const create = () => {
+    const createSign = () => {
         if (sigCanvas.current) {
             const URL = sigCanvas.current.getTrimmedCanvas().toDataURL('image/png');
             setImageURL(URL);
-            setOpen(false);
+            setOpenSign(false);
         }
     };
 
@@ -196,79 +194,137 @@ function Document() {
         }
     };
 
+    const [selectedText, setSelectedText] = useState('');
+    const [openComment, setOpenComment] = useState(false);
+    const [openIcon, setOpenIcon] = useState(false);
+    const [top, setTop] = useState(0)
+
+    useEffect(() => {
+        const handleSelectionChange = () => {
+            if (editorRef.current) {
+                const editor = editorRef.current;
+                const contentWindow = editor.getWin();
+                const selection = contentWindow.getSelection();
+                const range = editor.selection.getRng();
+                
+                
+                if (selection) {
+                    const text = selection.toString();
+                    setSelectedText(text);
+                    if(text){
+                        setOpenIcon(true)
+                        const rect = range.getBoundingClientRect();
+                        console.log(top)
+                        setTop(rect.top)
+                    }
+                    else {
+                        setOpenIcon(false)
+                        setOpenComment(false)
+                    }
+                }
+            }
+        };
+
+        const editor = editorRef.current;
+        if (editor) {
+            const contentWindow = editor.getWin();
+            contentWindow.addEventListener('mouseup', handleSelectionChange);
+            contentWindow.addEventListener('keyup', handleSelectionChange);
+        }
+
+        return () => {
+            if (editor) {
+                const contentWindow = editor.getWin();
+                contentWindow.removeEventListener('mouseup', handleSelectionChange);
+                contentWindow.removeEventListener('keyup', handleSelectionChange);
+            }
+        };
+    }, [editorRef.current]);
+
+    const handleAddComment = () => {
+        setOpenComment(true)
+        setOpenIcon(false)
+    };
+
     return (
-        <div id="container">
-            <div id="docs-header" style={{ position: "relative" }}>
+        <React.Fragment>
+            <Box className={classes.docHeader}>
                 {/* <button onClick={addContent}>Append</button> */}
+                <p>{`Selected Text: ${selectedText}`}</p>
+                <Box className={openIcon ? 'icon open' : 'icon'} sx={{top: `${top + 200}px !important`}}>
+                    <IconButton aria-label="add" onClick={handleAddComment}>
+                        <AddCommentOutlinedIcon style={{ color: 'black' }}/>
+                    </IconButton>
+                </Box>
+                <Box className={openComment ? 'dialog open' : 'dialog'} sx={{top: `${top + 200}px !important`}}>
+                    <Typography variant='h6' className={classes.titleComment}>
+                        Thêm bình luận
+                    </Typography>
+                    <TextField id="outlined-basic" variant="outlined" multiline sx={{width: '100%'}}/>
+                    <Box sx={{float: "right"}}>
+                        <Button color="success">Hủy</Button>
+                        <Button disabled>Bình luận</Button>
+                    </Box>
+                </Box>
                 <Container>
                     <Dialog
-                        open={open}
+                        open={openSign}
                         onClose={handleClose}
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
-                    > 
+                    >
                         <DialogContent>
-                            <div className="sigPadContainer">
+                            <Box className={classes.sigPadContainer}>
                                 <SignatureCanvas
                                     canvasProps={{ width: 500, height: 200 }} ref={sigCanvas} penColor={penColor}
                                 />
-
-                                <button onClick={() => { if (sigCanvas.current) { sigCanvas.current.clear() } }}>Clear</button>
-                                <div className="sigPad__penColors">
-                                    <p>Pen Color:</p>
+                                <Button className={classes.btnClear} onClick={() => { if (sigCanvas.current) { sigCanvas.current.clear() } }}>Clear</Button>
+                                <Box className={classes.sigPadPenColors}>
+                                    <Typography>Pen Color:</Typography>
                                     {colors.map((color) => (
-                                        <span
+                                        <Box
                                             key={color}
                                             style={{
                                                 backgroundColor: color,
                                                 border: color === penColor ? `2px solid ${color}` : "",
-                                                width: "20px",
-                                                height: "20px",
-                                                display: "inline-block",
-                                                margin: "5px",
-                                                cursor: "pointer"
                                             }}
+                                            className={classes.boxColor}
                                             onClick={() => setPenColor(color)}
-                                        ></span>
+                                        ></Box>
                                     ))}
-                                </div>
-                            </div>
+                                </Box>
+                            </Box>
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose}>Cancle</Button>
-                            <Button onClick={create} autoFocus>
+                            <Button onClick={createSign} autoFocus>
                                 Create
                             </Button>
                         </DialogActions>
                     </Dialog>
                 </Container>
 
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Box style={{ display: "flex", justifyContent: "space-between" }}>
                     <Input
                         name="input-doc-title"
                         variant="outlined"
                         color="success"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        sx={{
-                            width: "30%",
-                            border: "none",
-                            fontWeight: "bold",
-                            fontSize: 20,
-                        }}
+                        className={classes.inputTitleDoc}
                     />
-                    <div style={{ display: "flex" }}>
+                    <Box style={{ display: "flex" }}>
                         <Button>
-                            <History />
+                            <History sx={{ color: "rgb(34, 47, 62)" }} />
                         </Button>
                         <Dashboard
-                            {...{ iconButton: <Groups />, element: <UsersGroup /> }}
+                            {...{ iconButton: <Groups sx={{ color: "rgb(34, 47, 62)" }} />, element: <UsersGroup /> }}
                         />
                         <RightDrawer {...{ element: <Chat /> }} />
-                    </div>
-
-                </div>
-            </div>
+                        <Avatar sx={{ margin: "0 10px" }} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                    </Box>
+                </Box>
+            </Box>
 
             <Editor
                 apiKey="aejb5qweihjrg4au7khd60k41jslrwbqrf00cr9vg6q28jcy"
@@ -277,7 +333,7 @@ function Document() {
                     plugins:
                         "help lists advlist directionality insertdatetime fullscreen save pagebreak anchor preview autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker code",
                     toolbar:
-                        "code undo redo | blocks fontfamily fontsize | bold italic underline strikethrough backcolor | link image media table mergetags pagebreak | ltr rtl | alignleft aligncenter alignright alignjustify lineheight | checklist numlist bullist indent outdent | emoticons charmap insertdatetime | preview Word PDF Sign | searchreplace fullscreen removeformat | restoredraft save",
+                        "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough backcolor | link image media table mergetags pagebreak | ltr rtl | alignleft aligncenter alignright alignjustify lineheight | checklist numlist bullist indent outdent | emoticons charmap insertdatetime | preview Word PDF Sign | searchreplace fullscreen removeformat | restoredraft save",
                     menubar: "favs file edit view insert format tools table help",
                     fullscreen_native: true,
                     pagebreak_split_block: true,
@@ -326,7 +382,7 @@ function Document() {
                 value={content}
             />
             <TableOfContent content={content} editorRef={editorRef} />
-        </div>
+        </React.Fragment>
     );
 }
 
