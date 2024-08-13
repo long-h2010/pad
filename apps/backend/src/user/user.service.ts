@@ -11,7 +11,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(User.name)
+        @InjectModel(User.name) 
         private userModel: Model<User>
     ) {}
 
@@ -66,7 +66,8 @@ export class UserService {
         return user._id;
     }
 
-    async update(id: string, updateData: UpdateUserDto) {
+    async updateInfor(id: string, updateData: UpdateUserDto) {
+        const userLogin = await this.findById(id);
         const newData = updateData;
 
         const password = updateData.password;
@@ -75,6 +76,12 @@ export class UserService {
             const hashedPassword = await bcrypt.hash(password, 10);
             newData.password = hashedPassword;
         };
+
+        const nickname = updateData.nickname;
+        if (nickname !== userLogin.nickname) {
+            const user = await this.userModel.findOne({ nickname: nickname})
+            if (user) throw new BadRequestException('Nickname is already exists')
+        }
 
         await this.userModel.findByIdAndUpdate(id, newData);
 
@@ -86,7 +93,7 @@ export class UserService {
         if (!await bcrypt.compare(passwordData.oldPassword, user.password)) 
             throw new UnauthorizedException('Old password is incorrect!');
 
-        await this.update(id, { password: passwordData.newPassword });
+        await this.updateInfor(id, { password: passwordData.newPassword });
 
         return { message: 'Change password successful' };
     }
@@ -96,7 +103,7 @@ export class UserService {
             username: name,
             otp: otp,
             otpExpiry: { $gt: Date.now() }
-        }
+        };
 
         const user = await this.userModel.findOne(query);
         if (!user) throw new BadRequestException('OTP is invalid or has expired');

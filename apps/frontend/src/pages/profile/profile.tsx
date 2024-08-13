@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Container, Tab, Tabs, Typography } from '@mui/material';
 import axios from 'axios';
 import PrimarySearchAppBar from '../../components/appbar';
@@ -41,11 +41,12 @@ function a11yProps(index: number) {
 }
 
 function Profile() {
-    const { user_url } = useGlobalContext();
+    const { user_url, cloud_url, error, setError } = useGlobalContext();
     const { classes } = ProfileStyles();
     const token = localStorage.getItem('token');
     const [value, setValue] = React.useState(0);
-    const [avatar, setAvatar] = useState('');
+    const [avatar, setAvatar] = useState(null);
+    const [avatarUrl, setAvatarUrl] = useState('');
     const [fullname, setFullname] = useState('');
     const [gender, setGender] = useState('male');
     const [birthday, setBirthday] = useState('');
@@ -54,50 +55,88 @@ function Profile() {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [error, setError] = useState('');
 
-    axios
-        .get(`${user_url}/`, { headers: { Authorization: `Bearer ${token}` } })
-        .then((res) => {
-            const user = res.data;
-            setAvatar(user.avatar)
-            setFullname(user.name);
-            setGender(user.gender ? user.gender : '');
-            setBirthday(user.birthday ? user.birthday : '');
-            setEmail(user.email);
-            setNickname(user.nickname);
-        })
-        .catch((err) => console.log(err))
+    useEffect(() => {
+        axios
+            .get(`${user_url}/`, { headers: { Authorization: `Bearer ${token}` } })
+            .then((res) => {
+                const user = res.data;
+                setAvatarUrl(user.avatar)
+                setFullname(user.name);
+                setGender(user.gender);
+                setBirthday(user.birthday ? user.birthday : undefined);
+                // setBirthday(format(user.birthday, `dd:mm:yy`));
+                setEmail(user.email);
+                setNickname(user.nickname);
+            })
+            .catch((err) => console.log(err))
+    }, [])
 
-    const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    const handleChangeTap = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
+    const handleUpdateInfo = () => {
+        const updateData = {
+            name: fullname,
+            gender: gender,
+            birthday: birthday,
+            email: email,
+            nickname: nickname
+        };
+
+        axios
+            .post(`${user_url}/update-information`, {
+                Authorization: `Bearer ${token}`,
+                updateData
+            })
+            .then((res) => console.log(res))
+            .catch((err) => setError(err.response.data.message))
+    };
+
+    const handleUpdateAvatar = () => {
+        const file = new FormData();
+        file.append('avatar', avatar as any)
+        console.log(file)
+
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+
+        axios
+            .post(`${cloud_url}/update-avatar`, file, config)
+            .then((res) => console.log(res.data.message))
+            .catch((err) => setError(err.response.data.message))
+    }
 
     const handleChangePassword = () => {
         if (newPassword !== confirmNewPassword) {
             setError('New password and password confirm don\'t match!')
         } else {
             const passwordData: any = {
-                oldPassword: oldPassword, 
-                newPassword: newPassword  
-            }
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            };
 
             for (let i in passwordData) {
                 if (passwordData[i] === '') {
                     setError(`Please enter your ${i}`);
                     return;
-                } 
+                }
             }
 
             axios
-                .post(`${user_url}/change-password`, { 
-                    Authorization: `Bearer ${token}`, 
+                .post(`${user_url}/change-password`, {
+                    Authorization: `Bearer ${token}`,
                     passwordData
                 })
                 .then((res) => console.log(res.data.message))
                 .catch((err) => setError(err.response.data.message))
         }
-    }
+    };
 
     return (
         <>
@@ -116,8 +155,9 @@ function Profile() {
                             <Avatar
                                 className={classes.avatar}
                                 alt='Remy Sharp'
-                                src={avatar}
+                                src={avatarUrl}
                             />
+                            <input type="file" onChange={(e: any) => setAvatar(e.target.files[0])} />
                             <Typography className={classes.nameUser} variant='h5'>
                                 {fullname}
                             </Typography>
@@ -125,7 +165,7 @@ function Profile() {
                                 orientation='vertical'
                                 variant='scrollable'
                                 value={value}
-                                onChange={handleChange}
+                                onChange={handleChangeTap}
                                 aria-label='Vertical tabs example'
                                 sx={{ borderRight: 1, borderColor: 'divider' }}
                             >
@@ -144,27 +184,27 @@ function Profile() {
                         <Box className={classes.paperRight}>
                             <TabPanel value={value} index={0}>
                                 <Information {...{
-                                    classes: classes,
-                                    fullname: fullname,
-                                    setFullname: setFullname,
-                                    gender: gender,
-                                    setGender: setGender,
-                                    birthday: birthday,
-                                    setBirthday: setBirthday,
-                                    email: email,
-                                    setEmail: setEmail,
-                                    nickname: nickname,
-                                    setNickname: setNickname
+                                    fullname,
+                                    setFullname,
+                                    gender,
+                                    setGender,
+                                    birthday,
+                                    setBirthday,
+                                    email,
+                                    setEmail,
+                                    nickname,
+                                    setNickname,
+                                    handleUpdateInfo: handleUpdateAvatar,
+                                    error
                                 }} />
                             </TabPanel>
                             <TabPanel value={value} index={1}>
                                 <ChangePassword {...{
-                                    classes: classes,
-                                    error: error,
-                                    setOldPassword: setOldPassword,
-                                    setNewPassword: setNewPassword,
-                                    setConfirmNewPassword: setConfirmNewPassword,
-                                    handleChangePassword: handleChangePassword
+                                    setOldPassword,
+                                    setNewPassword,
+                                    setConfirmNewPassword,
+                                    handleChangePassword,
+                                    error
                                 }} />
                             </TabPanel>
                         </Box>

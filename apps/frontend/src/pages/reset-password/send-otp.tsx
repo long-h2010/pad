@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { AccountCircle, LockOutlined } from '@mui/icons-material';
 import { Input } from '@mui/joy';
+import ErrorMessage from '../../components/error-message';
 const SendOTP: React.FC<any> = (props) => {
     const classes = props.classes;
     const setUsername = props.setUsername;
@@ -31,7 +32,7 @@ const SendOTP: React.FC<any> = (props) => {
                 color='neutral'
                 onChange={e => setUsername(e.target.value)}
             />
-            <p className='error'>{error}</p>
+            {error !== '' ? <ErrorMessage {...{ message: error }} /> : <></>}
             <Button
                 type='button'
                 className={classes.btn}

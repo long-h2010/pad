@@ -5,7 +5,7 @@ import GroupStyles from './style';
 
 const SearchUser: React.FC<any> = (props) => {
     const { classes } = GroupStyles();
-    const { listSearch, handleClickSearchItem, setSearchValue, listUser } = props;
+    const { listSearch, handleClickSearchItem, setSearchValue, listUser, handleDeleteSearchItem } = props;
 
     return (
         <Autocomplete
@@ -30,12 +30,12 @@ const SearchUser: React.FC<any> = (props) => {
                 )
             }}
             value={listUser}
+            isOptionEqualToValue={(option, value) => option.nickname === value.nickname}
             renderTags={(value: any, getTagProps) =>
                 value.map((option: any, index: number) => {
-                    console.log(option)
                     const { key } = getTagProps({ index });
                     return (
-                        <UserChip key={key} user={option} />
+                        <UserChip key={key} user={option} onDelete={handleDeleteSearchItem}/>
                     );
                 })
             }

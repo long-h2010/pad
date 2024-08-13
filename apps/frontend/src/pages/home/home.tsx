@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useGlobalContext } from '../../context';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { createTheme, Grid, IconButton, ThemeProvider } from '@mui/material';
+import { Box, Container, createTheme, Grid, IconButton, ThemeProvider, Typography } from '@mui/material';
 import { NoteAddOutlined, SortByAlpha, UploadFileOutlined } from '@mui/icons-material';
 import PrimarySearchAppBar from '../../components/appbar';
 import DocItem from '../../components/doc-item';
 import Loading from '../../components/loading';
 import MySpeedDial from '../../components/speed-dial';
 import './home.css';
+import HomeStyles from './style';
 
 declare module '@mui/system' {
     interface BreakpointOverrides {
@@ -30,6 +31,7 @@ function Home() {
     const token = localStorage.getItem('token');
     const { doc_url, loading } = useGlobalContext();
     const [documents, setDocuments] = useState([]);
+    const { classes } = HomeStyles();
 
     const fetchDocuments = useCallback(async () => {
         axios
@@ -87,7 +89,7 @@ function Home() {
             <header>
                 <PrimarySearchAppBar />
             </header>
-            <div id='docs-content'>
+            <Box className={classes.containerHome} >
                 <ThemeProvider
                     theme={createTheme({
                         breakpoints: {
@@ -104,28 +106,27 @@ function Home() {
                         container
                         spacing={{ mobile: 1, tablet: 1, laptop: 2, desktop: 3 }}
                         columns={12}
-                        className='grid-container'
+                        className={classes.gridContainer}
                     >
-                        <div className='content-header'>
-                            <div>
-                                <h5 className='content-title' style={{ fontWeight: 500 }}>
+                        <Box className={classes.contentHeader}>
+                            <Box>
+                                <Typography variant='h5'>
                                     Tài liệu gần đây
-                                </h5>
-                            </div>
-                            <div style={{ display: 'flex' }}>
-                                <select
-                                    className='form-select'
-                                    style={{ display: 'inline', color: 'black' }}
+                                </Typography>
+                            </Box>
+                            <Box style={{ display: 'flex' }}>
+                                <select 
+                                    className={classes.selectRule}
                                     aria-label='Default select example'
                                 >
                                     <option value='1'>Do tôi sở hữu</option>
-                                    <option value='2'>Do mọi người sở hữu</option>
+                                    <option value='2'>Được chia sẻ với tôi</option>
                                 </select>
                                 <IconButton>
-                                    <SortByAlpha />
+                                    <SortByAlpha sx={{color: "black"}}/>
                                 </IconButton>
-                            </div>
-                        </div>
+                            </Box>
+                        </Box>
 
                         {documents.map((document: any) => (
                             <Grid
@@ -141,7 +142,7 @@ function Home() {
                         ))}
                     </Grid>
                 </ThemeProvider>
-            </div>
+            </Box>
             <MySpeedDial actions={actions} />
         </main>
     );

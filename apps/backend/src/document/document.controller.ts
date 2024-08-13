@@ -44,16 +44,6 @@ export class DocumentController {
         return this.docSevice.getListUser(docId);
     }
 
-    @Put(':docId/add-users/:role')
-    async addUsersRole(@Param('docId') docId: string, @Param('role') role: string, @Body(ValidationPipe) addUsers: UsersRoleDto) {
-        return this.docSevice.addUsersRole(docId, role, addUsers);
-    }
-
-    @Put(':docId/delete-users/:role')
-    async deleteUsersRole(@Param('docId') docId: string, @Param('role') role: string, @Body(ValidationPipe) delUsersDto: UsersRoleDto) {
-        return this.docSevice.deleteUsersRole(docId, role, delUsersDto);
-    }
-
     @Put(':docId/update-role')
     async updateUsersRole(@Param('docId') docId: string, @Body('nicknames') nicknames: any) {
         return this.docSevice.updateUsersRole(docId, nicknames);

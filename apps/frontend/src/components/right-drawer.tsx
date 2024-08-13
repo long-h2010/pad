@@ -4,14 +4,14 @@ import { MessageOutlined } from '@mui/icons-material';
 import { useGlobalContext } from '../context';
 
 const RightDrawer: React.FC<any> = (props) => {
-    const { open, toggleDrawer } = useGlobalContext();
+    const { openDrawer, setOpenDrawer } = useGlobalContext();
 
     return (
         <>
-            <Button onClick={() => toggleDrawer(!open)}>
-                <MessageOutlined />
+            <Button onClick={() => setOpenDrawer(!openDrawer)}>
+                <MessageOutlined sx={{ color: "rgb(34, 47, 62)" }}/>
             </Button>
-            <Drawer open={open} anchor='right' onClose={() => toggleDrawer(!open)}>
+            <Drawer open={openDrawer} anchor='right' onClose={() => setOpenDrawer(!open)}>
                 {props.element}
             </Drawer>
         </>

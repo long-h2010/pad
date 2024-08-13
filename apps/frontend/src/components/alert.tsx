@@ -1,9 +1,27 @@
-import { useEffect, useState } from "react";
-import useStyles from '../pages/login/styles';
+import { useEffect, useState } from 'react';
 import { Alert } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+import { useGlobalContext } from '../context';
 
-const AlertMessage = () => {
-    const [showAlert, setShowAlert] = useState(false);
+const useStyles = makeStyles()(() => {
+    return {
+        alert: {
+            position: 'fixed',
+            width: '600px',
+            top: '-100px',
+            left: '50%',
+            border: '1px solid green',
+            transform: 'translateX(-50%)',
+            transition: 'top 0.5s ease-in-out',
+            '&.show': {
+                top: '140px'
+            }
+        }
+    }
+});
+
+const AlertMessage: React.FC<any> = () => {
+    const { showAlert, setShowAlert, alertMessage } = useGlobalContext();
     const [alertClass, setAlertClass] = useState('');
     const { classes } = useStyles();
 
@@ -17,17 +35,13 @@ const AlertMessage = () => {
         } else {
             setAlertClass('');
         }
-    }, [showAlert]);
+    }, [showAlert])
 
-    const toggleAlert = () => {
-        setShowAlert(!showAlert);
-    };
     return (
         <>
-            <Alert className={`${classes.alert} ${alertClass}`} severity="success">This is a success Alert.</Alert>
-            <button onClick={toggleAlert}>Toggle Alert</button>
+            <Alert className={`${classes.alert} ${alertClass}`} severity='success'>{alertMessage}</Alert>
         </>
     );
 }
 
-export default AlertMessage;
+export default AlertMessage

@@ -3,6 +3,25 @@ import { styled, alpha } from '@mui/material/styles';
 import { AppBar, Badge, Box, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { AccountCircleOutlined, MailOutline, Menu as MenuIcon, MoreVert, NotificationsNone, Search as SearchIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+
+const AppBarStyles = makeStyles()(() => {
+    return {
+        link: {
+            color: 'black',
+            '&:hover': {
+                color: 'green'
+            }
+        },
+        linkPAD: {
+            color: '#106b1f',
+            fontWeight: 'bold',
+            '&:hover': {
+                color: 'green'
+            }
+        }
+    };
+});
 
 const AppName = import.meta.env.VITE_APP_NAME;
 
@@ -49,6 +68,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function PrimarySearchAppBar() {
+    const { classes } = AppBarStyles();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -77,17 +98,19 @@ function PrimarySearchAppBar() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             id={menuId}
             keepMounted
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>
-                <Link to={"/profile"}>Profile</Link>
+                <Link className={classes.link} to={'/profile'}>My account</Link>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+                <Link className={classes.link} to={'#'}>Logout</Link>
+            </MenuItem>
         </Menu>
     );
 
@@ -160,7 +183,7 @@ function PrimarySearchAppBar() {
                         component='div'
                         sx={{ display: { xs: 'none', sm: 'block' } }}
                     >
-                        {AppName}
+                        <Link to={'/'} className={classes.linkPAD}>{AppName}</Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Search>

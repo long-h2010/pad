@@ -1,38 +1,38 @@
-import { Avatar, Chip, Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import ClearIcon from "@mui/icons-material/Clear";
+import { Avatar, Chip, styled } from '@mui/material';
+import { Clear } from '@mui/icons-material';
 
-const CustomChip = styled(Chip)(({ theme }) => ({
-	"& .MuiChip-deleteIcon": {
-		color: "grey",
-		width: "15px",
+const CustomChip = styled(Chip)(() => ({
+	'& .MuiChip-deleteIcon': {
+		color: 'grey',
+		width: '15px',
 	},
 }));
 
 const UserChip: React.FC<any> = (props) => {
-	const user = props.user;
-	const handleOnDrag = props.handleOnDrag;
+	const { user, handleOnDrag, onDelete } = props;
 
 
-	const handleClick = () => {
-		console.info("You clicked the Chip.");
+	const handleClick = (e: any) => {
+		console.log(e);
 	};
 
-	const handleDelete = () => { };
+	const handleDelete = (nickname: string) => {
+		onDelete(nickname)
+	};
 
 	return (
 		<CustomChip
 			draggable
 			onDragStart={(e) => handleOnDrag(e, user)}
 			label={user.nickname}
-			variant="outlined"
+			variant='outlined'
 			onClick={handleClick}
-			onDelete={handleDelete}
-			deleteIcon={<ClearIcon />}
-			sx={{ padding: "5px", color: "black" }}
-			avatar={<Avatar alt="avatar" src={user.avatar} />}
+			onDelete={() => handleDelete(user.nickname)}
+			deleteIcon={<Clear />}
+			sx={{ padding: '5px', color: 'black' }}
+			avatar={<Avatar alt='avatar' src={user.avatar} />}
 		/>
 	);
 };
 
-export default UserChip;
+export default UserChip

@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { DocumentModule } from './document/document.module';
 import { EventsModule } from './events/events.module';
 import { ChatModule } from './chat/chat.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { ChatModule } from './chat/chat.module';
     UserModule,
     DocumentModule,
     EventsModule,
-    ChatModule
+    ChatModule,
+    CloudinaryModule
   ],
   controllers: [AppController],
   providers: [AppService],

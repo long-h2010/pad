@@ -34,7 +34,6 @@ const ResetPassword: React.FC<any> = (props) => {
                     setElement: setPassword,
                 }}
             />
-
             <FieldInput
                 {...{
                     classNameTitle: classes.subtitle,

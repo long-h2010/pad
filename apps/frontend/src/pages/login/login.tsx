@@ -13,7 +13,7 @@ import ErrorMessage from '../../components/error-message';
 
 function Login() {
     const navigateTo = useNavigate();
-    const auth_url = useGlobalContext().auth_url;
+    const { auth_url } = useGlobalContext();
     const { classes } = LoginStyles();
 
     const [username, setUsername] = useState('');
@@ -29,11 +29,11 @@ function Login() {
             if (loginData[i] === '') {
                 setError(`Please enter your ${i}`);
                 return;
-            } 
+            }
         }
 
         axios
-            .post(auth_url + 'login', loginData)
+            .post(`${auth_url}/login`, loginData)
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
                 navigateTo('/');
@@ -46,7 +46,7 @@ function Login() {
     const handleGoogleLogin = async (credentialResponse: any) => {
         const token = credentialResponse.credential;
         axios
-            .post(auth_url + 'google/login', { token: token })
+            .post(`${auth_url}/google/login`, { token: token })
             .then((res) => {
                 localStorage.setItem('token', res.data.token);
                 navigateTo('/');

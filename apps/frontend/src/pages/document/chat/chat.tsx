@@ -96,7 +96,7 @@ function Chat() {
     const socket = io('http://localhost:3000');
     const { chat_url } = useGlobalContext();
     const { classes } = useStyles();
-    const { open, toggleDrawer } = useGlobalContext();
+    const { openDrawer, setOpenDrawer } = useGlobalContext();
     const [messages, setMessages] = useState({});
     const [message, setMessage] = useState('');
     const token: string = localStorage.getItem('token') || '';
@@ -181,7 +181,7 @@ function Chat() {
                     <Box>
                         <Button
                             className={classes.closeBtn}
-                            onClick={() => toggleDrawer(!open)}
+                            onClick={() => setOpenDrawer(!openDrawer)}
                         >
                             <Close />
                         </Button>

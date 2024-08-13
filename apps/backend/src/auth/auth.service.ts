@@ -87,7 +87,7 @@ export class AuthService {
         const otp = this.generateOTP();
         const otpExpiry = new Date(Date.now() + 60 * 1000);
 
-        await this.userService.update(user._id.toString(), { otp: otp, otpExpiry: otpExpiry });
+        await this.userService.updateInfor(user._id.toString(), { otp: otp, otpExpiry: otpExpiry });
 
         this.mailerService
             .sendMail({

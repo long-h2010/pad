@@ -6,7 +6,7 @@
 .tox .tox-editor-container {
     align-items: center;
     height: max-content !important;
-    background: #dddddd;
+    background-color: white;
 }
 
 .tox .tox-editor-header {
@@ -16,12 +16,13 @@
 .tox .tox-sidebar-wrap {
     margin-top: 2% !important;
     margin-bottom: 2% !important;
+    display: block;
 }
 
 .tox .tox-edit-area {
     width: 794px;
     height: 1123px;
-    outline: 1px solid #c7c7c7;;
+    outline: 1px solid #c7c7c7;
 }
 
 .tox .tox-edit-area::before {
@@ -33,12 +34,62 @@
     font-weight: bold;
 }
 
-#docs-header {
-    padding: 10px;
-    padding-bottom: 0;
+.tox-statusbar__text-container {
+    display: none !important;
 }
 
-.input-doc-title {
-    font-size: 20px;
-    font-weight: bold;
+.dialog.open {
+    background-color: white;
+    border-color: #eee;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 0;
+    box-shadow: 0 16px 16px -10px rgba(34, 47, 62, .15), 0 0 40px 1px rgba(34, 47, 62, .15);
+    max-height: 100%;
+    max-width: 480px;
+    right: 10px;
+    overflow: hidden;
+    position: absolute;
+    width: 320px;
+    height: fit-content;
+    z-index: 1;
+    padding: 20px;
+    display: block;
+}
+
+.dialog {
+    display: none;
+}
+
+.icon {
+    display: none;
+}
+
+.icon.open {
+    display: block;
+    position: absolute;
+    right: 20%;
+    z-index: 1;
+}
+
+.comment {
+    display: none;
+}
+
+.comment.open {
+    background-color: rgb(237, 250, 241);
+    border-color: #eee;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 0;
+    max-height: 100%;
+    max-width: 480px;
+    right: 10px;
+    overflow: hidden;
+    position: absolute;
+    width: 320px;
+    height: fit-content;
+    z-index: 1;
+    padding: 20px;
+    display: block;
 }

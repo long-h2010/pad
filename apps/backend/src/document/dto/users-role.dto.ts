@@ -4,5 +4,5 @@ export class UsersRoleDto {
     @IsArray()
     @ArrayNotEmpty()
     @IsString({ each: true })
-    users: string[]
+    nicknames: string[]
 }

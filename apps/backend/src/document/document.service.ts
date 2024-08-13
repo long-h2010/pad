@@ -84,26 +84,6 @@ export class DocumentService {
         return { message: 'Update document successful' };
     }
 
-    async addUsersRole(docId: string, role: string, addUsersDto: UsersRoleDto) {
-        const doc = await this.findOne(docId);
-
-        const usersId = [...doc[role].map((id: string) => id), ...addUsersDto.users];
-
-        const users = Array.from(new Set(usersId));
-
-        const docUpdateOwner = await this.docModel.findByIdAndUpdate(docId, { [role]: users });
-        return docUpdateOwner;
-    }
-
-    async deleteUsersRole(docId: string, role: string, delUsersDto: UsersRoleDto) {
-        const doc = await this.findOne(docId);
-
-        const users = [...doc[role].filter((id: string) => !delUsersDto.users.includes(id))];
-
-        const docUpdateOwner = await this.docModel.findByIdAndUpdate(docId, { [role]: users });
-        return docUpdateOwner;
-    }
-
     async updateUsersRole(docId: string, nicknames: any) {
         const query = {
             owners: await Promise.all(nicknames.owners.map(async (nickname: string) => {

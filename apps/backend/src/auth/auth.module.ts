@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-// import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { DatabaseModule } from 'database/database.module';
 import { UserService } from 'src/user/user.service';
@@ -40,4 +39,4 @@ import { MailerModule } from '@nestjs-modules/mailer';
   controllers: [AuthController],
   providers: [AuthService, UserService],
 })
-export class AuthModule { }
+export class AuthModule {}

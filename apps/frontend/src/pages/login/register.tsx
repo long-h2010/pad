@@ -9,18 +9,17 @@ import LinkLine from '../../components/link-line';
 import LinkBack from '../../components/link-back';
 import ErrorMessage from '../../components/error-message';
 import { useGlobalContext } from '../../context';
+import AlertMessage from '../../components/alert';
 
 function Register() {
     const navigateTo = useNavigate();
-    const auth_url = useGlobalContext().auth_url;
+    const { auth_url, setAlertMessage, setShowAlert, error, setError } = useGlobalContext();
     const { classes } = LoginStyles();
-
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
 
     const handelSubmitSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,14 +38,18 @@ function Register() {
                 if (signupData[i] === '') {
                     setError(`Please enter your ${i}`);
                     return;
-                } 
+                }
             }
 
             axios
-                .post(auth_url + 'register', signupData)
+                .post(`${auth_url}/register`, signupData)
                 .then(() => {
+                    setAlertMessage('Sign up successful');
+                    setShowAlert(true);
                     setError('');
-                    navigateTo('/login')
+                    setTimeout(() => {
+                        navigateTo('/login');
+                    }, 3000);
                 })
                 .catch((err) => {
                     setError(err.response.data.message);
@@ -57,7 +60,7 @@ function Register() {
     return (
         <Container sx={{ zIndex: 10 }}>
             <LinkBack {...{ classes: classes, title: 'loginpage', href: '/login' }} />
-            <Box className={classes.imageBackground}>
+            <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
                         <Typography className={classes.title} variant='h4'>
@@ -89,7 +92,8 @@ function Register() {
                         <LinkLine {...{ content: 'Already have an account?', link: 'Login here', href: '/login' }} />
                     </Box>
                 </Box>
-            </Box>
+            </Container>
+            <AlertMessage />
         </Container>
     );
 }

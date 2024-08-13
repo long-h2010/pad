@@ -2,6 +2,7 @@ import { List, Typography } from '@mui/material';
 import { Pin } from '@mui/icons-material';
 import OTPInput from '../../components/otp-input';
 import LinkLine from '../../components/link-line';
+import ErrorMessage from '../../components/error-message';
 
 const VerifyOTP: React.FC<any> = (props) => {
     const classes = props.classes;
@@ -24,7 +25,7 @@ const VerifyOTP: React.FC<any> = (props) => {
             <List>
                 <OTPInput length={6} onComplete={handleVerifyOtp} />
             </List>
-            <p className='error'>{error}</p>
+            {error !== '' ? <ErrorMessage {...{ message: error }} /> : <></>}
             <LinkLine {...{ content: `Didn't receive code?`, link: 'Request again', herf: '#' }} />
         </>
     );
