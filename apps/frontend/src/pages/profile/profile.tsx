@@ -108,6 +108,9 @@ function Profile() {
                         .css-10d9dml-MuiTabs-indicator {
                             background-color: green;
                         }
+                        .MuiTabs-scroller {
+                            width: 100%
+                        }
                     `}
                 </style>
                 <Box>
@@ -127,7 +130,7 @@ function Profile() {
                                 value={value}
                                 onChange={handleChange}
                                 aria-label='Vertical tabs example'
-                                sx={{ borderRight: 1, borderColor: 'divider' }}
+                                sx={{ alignItems: 'center' }}
                             >
                                 <Tab
                                     className={classes.tab}

@@ -60,7 +60,7 @@ const ChangePassword: React.FC<any> = (props) => {
           <Button
             variant="contained"
             color="success"
-            onClick={handleChangePassword}
+            onClick={handleChangePassword} className={classes.btnSave}
           >
             Save
           </Button>

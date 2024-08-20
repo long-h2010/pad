@@ -15,7 +15,7 @@ const ProfileStyles = makeStyles()(() => {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: "80%",
+        width: "70%",
         height: "500px",
         boxSizing: "border-box",
         display: "block",
@@ -23,11 +23,11 @@ const ProfileStyles = makeStyles()(() => {
       },
       paperLeft: {
         float: "left",
-        width: "30%",
+        width: "25%",
         height: "100%",
         backgroundColor: "white",
         borderRadius: "10px 0 0 10px",
-        borderRight: "1px solid #d6d4d4"
+        boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
       },
       paperRight: {
         float: "right",
@@ -36,6 +36,7 @@ const ProfileStyles = makeStyles()(() => {
         backgroundColor: "white",
         borderRadius: "0 10px 10px 0",
         padding: "30px",
+        boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
       },
       title: {
         color: "black",
@@ -43,8 +44,8 @@ const ProfileStyles = makeStyles()(() => {
         marginBottom: "40px",
       },
       avatar: {
-        width: "140px",
-        height: "140px",
+        width: "150px",
+        height: "150px",
         margin: "20px auto",
       },
       nameUser: {
@@ -57,6 +58,7 @@ const ProfileStyles = makeStyles()(() => {
         "&.Mui-selected": {
           color: "green",
           fontWeight: "bold",
+          backgroundColor: "#caf0c7"
         },
       },
       subtitle: {
@@ -80,6 +82,14 @@ const ProfileStyles = makeStyles()(() => {
         marginRight: "20px",
         cursor: "pointer",
       },
+      btnSave: {
+        position: "absolute",
+        width: "150px",
+        height: "60px",
+        fontSize: "16px",
+        right: "-26px",
+        bottom: "-27px"
+      }
     };
 })
 
