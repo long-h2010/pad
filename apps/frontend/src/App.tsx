@@ -6,7 +6,8 @@ import ForgotPassword from "./pages/reset-password/forgot-password";
 import Document from "./pages/document/document";
 import Profile from "./pages/profile/profile";
 import NotFound from "./pages/not-found/not-found";
-import "mdb-react-ui-kit/dist/css/mdb.min.css";
+import DashboardLayout from "./pages/admin/dashboard"
+import UserPage from "./pages/admin/user"
 import "./App.css";
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
                     <Route path="/reset-password" Component={ForgotPassword}></Route>
                     <Route path="/profile" Component={Profile} />
                     <Route path="/document/:id" Component={Document} />
+                    <Route path="/dashboard" Component={DashboardLayout} />
+                    <Route path="/user" Component={UserPage} />
                     <Route path="*" Component={NotFound} />
                 </Routes>
             </BrowserRouter>

@@ -4,14 +4,15 @@ const DocumentStyles = makeStyles()(() => {
     return {
         docHeader: {
             padding: "15px",
-            paddingBottom: 0
+            paddingBottom: 0,
         },
-        inputTitleDoc: {
-            width: "30%",
-            border: "none",
-            fontWeight: "bold",
-            fontSize: 18,
-        },
+        // inputTitleDoc: {
+        //     width: "30%",
+        //     border: "none",
+        //     fontWeight: "bold",
+        //     fontSize: "16px",
+        //     color: "green"
+        // },
         boxColor: {
             width: "20px",
             height: "20px",

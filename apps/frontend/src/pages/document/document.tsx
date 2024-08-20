@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { debounce } from "lodash";
 import { Input } from "@mui/joy";
-import { Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, IconButton, TextField, Typography } from "@mui/material";
 import { Groups, History } from "@mui/icons-material";
 import { Editor } from "@tinymce/tinymce-react";
 import "./document.css";
@@ -21,6 +21,7 @@ import React from "react";
 import DocumentStyles from "./styles";
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 interface Comment {
     id: number,
@@ -274,74 +275,25 @@ function Document() {
         }
     };
 
+
+    var newDiv = document.createElement("div");
+    var childDiv = document.querySelector(".MuiBox-root.css-cc2bnb-docHeader");
+    var parentDiv = document.querySelector(".tox-editor-header");
+
+    if (parentDiv) {
+        if (childDiv) {
+            parentDiv.style.display = "block";
+            parentDiv.insertBefore(childDiv, parentDiv.firstChild);
+        }
+    }
+
+
+
     return (
         <React.Fragment>
+            {/* <button onClick={handleDownloadImage}>Tạo Thumbnail</button> */}
             <Box className={classes.docHeader}>
-                <button onClick={handleDownloadImage}>Tạo Thumbnail</button>
-                {position.map((p: Comment) => {
-                    return (
-                        <Box
-                            key={p.id}
-                            className={openDisplayComment ? "comment open" : "comment"}
-                            sx={{ top: `${p.top + 200}px !important` }}
-                        >
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyItems: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Avatar
-                                    alt="Remy Sharp"
-                                    src="/static/images/avatar/1.jpg"
-                                    sx={{ marginRight: "10px" }}
-                                />
-                                <Box>
-                                    <Typography variant="subtitle2">Thao Yi</Typography>
-                                    <Typography variant="caption">17:59 Hôm nay</Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{ marginTop: "10px" }}>
-                                <Typography variant="body2">{p.content}</Typography>
-                            </Box>
-                        </Box>
-                    );
-                })}
-                <Box
-                    className={openIcon ? "icon open" : "icon"}
-                    sx={{ top: `${top + 200}px !important` }}
-                >
-                    <IconButton aria-label="add" onClick={handleAddComment}>
-                        <AddCommentOutlinedIcon style={{ color: "black" }} />
-                    </IconButton>
-                </Box>
-
-                <Box
-                    className={openComment ? "dialog open" : "dialog"}
-                    sx={{ top: `${top + 200}px !important` }}
-                >
-                    <Typography variant="h6" className={classes.titleComment}>
-                        Thêm bình luận
-                    </Typography>
-                    <TextField
-                        onChange={(e) => setContentComment(e.target.value)}
-                        id="outlined-basic"
-                        variant="outlined"
-                        multiline
-                        sx={{ width: "100%" }}
-                        value={contentComment}
-                    />
-                    <Box sx={{ float: "right", marginTop: "10px" }}>
-                        <Button color="success" onClick={() => setOpenComment(false)}>
-                            Hủy
-                        </Button>
-                        <Button color="success" onClick={handleInputComment}>
-                            Bình luận
-                        </Button>
-                    </Box>
-                </Box>
-                <Container>
+                <Box>
                     <Dialog
                         open={openSign}
                         onClose={handleClose}
@@ -389,18 +341,11 @@ function Document() {
                             </Button>
                         </DialogActions>
                     </Dialog>
-                </Container>
+                </Box>
 
-                <Box style={{ display: "flex", justifyContent: "space-between" }}>
-                    <Input
-                        name="input-doc-title"
-                        variant="outlined"
-                        color="success"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className={classes.inputTitleDoc}
-                    />
-                    <Box style={{ display: "flex" }}>
+                <Box sx ={{ display: "flex", justifyContent: "space-between", padding: "20px 5px 10px 20px !important"}}>
+                    <TextField id="outlined-basic" variant="outlined" sx={{color: "green"}}/>
+                    <Box sx={{ display: "flex" }}>
                         <Button>
                             <History sx={{ color: "rgb(34, 47, 62)" }} />
                         </Button>
@@ -411,11 +356,9 @@ function Document() {
                             }}
                         />
                         <RightDrawer {...{ element: <Chat /> }} />
-                        <Avatar
-                            sx={{ margin: "0 10px" }}
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
-                        />
+                        <Button>
+                            <AccountCircleOutlinedIcon/>
+                        </Button>
                     </Box>
                 </Box>
             </Box>
@@ -471,6 +414,69 @@ function Document() {
                 value={content}
             />
             <TableOfContent content={content} editorRef={editorRef} />
+
+            {position.map((p: Comment) => {
+                return (
+                    <Box
+                        key={p.id}
+                        className={openDisplayComment ? "comment open" : "comment"}
+                        sx={{ top: `${p.top + 200}px !important` }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyItems: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Avatar
+                                alt="Remy Sharp"
+                                src="/static/images/avatar/1.jpg"
+                                sx={{ marginRight: "10px" }}
+                            />
+                            <Box>
+                                <Typography variant="subtitle2">Thao Yi</Typography>
+                                <Typography variant="caption">17:59 Hôm nay</Typography>
+                            </Box>
+                        </Box>
+                        <Box sx={{ marginTop: "10px" }}>
+                            <Typography variant="body2">{p.content}</Typography>
+                        </Box>
+                    </Box>
+                );
+            })}
+            <Box
+                className={openIcon ? "icon open" : "icon"}
+                sx={{ top: `${top + 200}px !important` }}>
+                <IconButton aria-label="add" onClick={handleAddComment}>
+                    <AddCommentOutlinedIcon sx={{ color: "black" }} />
+                </IconButton>
+            </Box>
+
+            <Box
+                className={openComment ? "dialog open" : "dialog"}
+                sx={{ top: `${top + 200}px !important` }}
+            >
+                <Typography variant="h6" className={classes.titleComment}>
+                    Thêm bình luận
+                </Typography>
+                <TextField
+                    onChange={(e) => setContentComment(e.target.value)}
+                    id="outlined-basic"
+                    variant="outlined"
+                    multiline
+                    sx={{ width: "100%" }}
+                    value={contentComment}
+                />
+                <Box sx={{ float: "right", marginTop: "10px" }}>
+                    <Button color="success" onClick={() => setOpenComment(false)}>
+                        Hủy
+                    </Button>
+                    <Button color="success" onClick={handleInputComment}>
+                        Bình luận
+                    </Button>
+                </Box>
+            </Box>
         </React.Fragment>
     );
 }
