@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -24,7 +24,7 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
-export default function UserView() {
+export default function DocumentView() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -36,17 +36,6 @@ export default function UserView() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const [openTable, setOpenTable] = useState(false)
-  useEffect(() => {
-    const path = window.location.pathname;
-    if (path === "/admin/user") {
-      setOpenTable(true)
-    }
-    else if (path === "/admin/document") {
-      setOpenTable(false)
-    }
-  }, [window.location.pathname])
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -115,14 +104,14 @@ export default function UserView() {
         `}
       </style>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4" sx={{fontWeight: "bold" }}>{openTable ? 'Users' : 'Documents'}</Typography>
+        <Typography variant="h4">Documents</Typography>
 
-        <Button variant="contained" sx={{ backgroundColor: "rgb(33, 43, 54)"}} startIcon={<Iconify icon="eva:plus-fill" />}>
-        {openTable ? 'New User' : 'New Document'}
+        <Button variant="contained" sx={{ backgroundColor: "rgb(33, 43, 54)" }} startIcon={<Iconify icon="eva:plus-fill" />}>
+          New User
         </Button>
       </Stack>
 
-      <Card sx={{ boxShadow: "rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;" }}>
+      <Card sx={{boxShadow: "rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;"}}>
         <UserTableToolbar
           numSelected={selected.length}
           filterName={filterName}
@@ -130,9 +119,9 @@ export default function UserView() {
         />
 
         <Scrollbar>
-          {openTable && <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead sx={{ backgroundColor: "pink" }}
+          <TableContainer sx={{ overflow: 'unset'}}>
+            <Table sx={{ minWidth: 800}}>
+              <UserTableHead sx={{backgroundColor: "pink"}}
                 order={order}
                 orderBy={orderBy}
                 rowCount={users.length}
@@ -156,7 +145,7 @@ export default function UserView() {
                     <UserTableRow
                       key={row.id}
                       name={row.name}
-                      status={row.status}
+                      status={row.status} 
                       avatarUrl={row.avatarUrl}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
@@ -171,49 +160,7 @@ export default function UserView() {
                 {notFound && <TableNoData query={filterName} />}
               </TableBody>
             </Table>
-          </TableContainer>}
-          {!openTable && <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead sx={{ backgroundColor: "pink" }}
-                order={order}
-                orderBy={orderBy}
-                rowCount={users.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'title', label: 'Title' },
-                  { id: 'owner', label: 'Owner' },
-                  { id: 'createAt', label: 'Creation Date' },
-                  { id: 'updateAt', label: 'Update Date' },
-                  { id: 'access', label: 'Access'},
-                  { id: 'comment', label: 'Comment' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      name={row.name}
-                      status={row.status}
-                      avatarUrl={row.avatarUrl}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
-                />
-
-                {notFound && <TableNoData query={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>}
+          </TableContainer>
         </Scrollbar>
 
         <TablePagination
@@ -227,5 +174,5 @@ export default function UserView() {
         />
       </Card>
     </Container>
-  )
+  );
 }

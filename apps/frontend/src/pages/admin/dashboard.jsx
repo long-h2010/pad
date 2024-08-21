@@ -1,36 +1,16 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-
-import Box from '@mui/material/Box';
-
-import Nav from '../../components/admin/nav';
-import Main from '../../components/admin/main';
-import Header from '../../components/admin/header';
+import { Helmet } from 'react-helmet-async'
 import AppView from '../../admin/sections/overview/view/app-view';
 
 // ----------------------------------------------------------------------
 
-export default function DashboardLayout() {
-  const [openNav, setOpenNav] = useState(false);
-
+export default function AppPage() {
   return (
     <>
-      <Header onOpenNav={() => setOpenNav(true)} />
+      <Helmet>
+        <title> Dashboard | Minimal UI </title>
+      </Helmet>
 
-      <Box
-        sx={{
-          minHeight: 1,
-          display: 'flex',
-          flexDirection: { xs: 'column', lg: 'row' },
-        }}
-      >
-        <Nav openNav={openNav} onCloseNav={() => setOpenNav(false)} />
-        <Main><AppView/></Main>
-      </Box>
+      <AppView />
     </>
   );
 }
-
-DashboardLayout.propTypes = {
-  children: PropTypes.node,
-};

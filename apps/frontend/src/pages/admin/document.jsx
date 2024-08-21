@@ -1,17 +1,16 @@
 import { Helmet } from 'react-helmet-async';
-
-import { NotFoundView } from 'src/sections/error';
+import DocumentView from "../../admin/sections/document/view/document-view"
 
 // ----------------------------------------------------------------------
 
-export default function NotFoundPage() {
+export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found </title>
+        <title> Document | Minimal UI </title>
       </Helmet>
 
-      <NotFoundView />
+      <DocumentView />
     </>
   );
 }

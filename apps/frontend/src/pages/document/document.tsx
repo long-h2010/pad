@@ -291,7 +291,6 @@ function Document() {
 
     return (
         <React.Fragment>
-            {/* <button onClick={handleDownloadImage}>Tạo Thumbnail</button> */}
             <Box className={classes.docHeader}>
                 <Box>
                     <Dialog

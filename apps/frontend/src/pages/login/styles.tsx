@@ -101,7 +101,8 @@ const LoginStyles = makeStyles()(() => {
             color: '#66799e', 
             display: "flex", 
             justifyContent: "center", 
-            alignItems: "center" 
+            alignItems: "center",
+            textDecoration: "none" 
         }
     };
 });

@@ -161,7 +161,7 @@ const Information: React.FC<any> = (props) => {
                         float: 'right',
                     }}
                 >
-                    <Button variant='contained' color='success' onClick={handleUpdateInfo}>
+                    <Button variant='contained' color='success' onClick={handleUpdateInfo} className={classes.btnSave}>
                         Save
                     </Button>
                 </Box>

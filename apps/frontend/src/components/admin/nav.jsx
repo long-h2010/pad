@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -62,7 +62,7 @@ export default function Nav({ openNav, onCloseNav }) {
   );
 
   const renderMenu = (
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+    <Stack component="nav" spacing={0.5} sx={{ px: 2, left: "5%", top: "24%"}}>
       {navConfig.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
@@ -137,6 +137,7 @@ function NavItem({ item }) {
   const pathname = usePathname();
 
   const active = item.path === pathname;
+  
 
   return (
     <ListItemButton
@@ -150,11 +151,11 @@ function NavItem({ item }) {
         textTransform: 'capitalize',
         fontWeight: 'fontWeightMedium',
         ...(active && {
-          color: 'primary.main',
-          fontWeight: 'fontWeightSemiBold',
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          color: 'rgb(27, 94, 32)',
+          fontWeight: 'bolder',
+          bgcolor: 'rgba(46, 125, 50, 0.16)',
           '&:hover': {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+            bgcolor: 'rgba(46, 125, 50, 0.16)',
           },
         }),
       }}
