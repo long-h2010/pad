@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { AppBar, Badge, Box, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Badge, Box, Button, IconButton, InputBase, Menu, MenuItem, Popover, Toolbar, Typography } from '@mui/material';
 import { AccountCircleOutlined, MailOutline, Menu as MenuIcon, MoreVert, NotificationsNone, Search as SearchIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import NotificationsPopover from '../components/admin/notifications-popover';
 
 const AppBarStyles = makeStyles()(() => {
     return {
@@ -11,14 +12,16 @@ const AppBarStyles = makeStyles()(() => {
             color: 'black',
             '&:hover': {
                 color: 'green'
-            }
+            },
+            textDecoration: 'none'
         },
         linkPAD: {
             color: '#106b1f',
             fontWeight: 'bold',
             '&:hover': {
                 color: 'green'
-            }
+            },
+            textDecoration: 'none'
         }
     };
 });
@@ -69,65 +72,43 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function PrimarySearchAppBar() {
     const { classes } = AppBarStyles();
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-        React.useState<null | HTMLElement>(null);
-
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    const handleOpenProfileMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
+    const handleCloseProfileMenu = () => {
+        setAnchorEl(null);
     };
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
+    const open = Boolean(anchorEl);
+
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
+        React.useState<null | HTMLElement>(null);
+
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
     };
 
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}>
-                <Link className={classes.link} to={'/profile'}>My account</Link>
-            </MenuItem>
-            <MenuItem onClick={handleMenuClose}>
-                <Link className={classes.link} to={'#'}>Logout</Link>
-            </MenuItem>
-        </Menu>
-    );
-
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            id={mobileMenuId}
+            id='primary-search-account-menu-mobile'
             keepMounted
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+                <IconButton size='large' color='inherit'>
                     <Badge badgeContent={4} color='error'>
                         <MailOutline />
                     </Badge>
@@ -135,22 +116,11 @@ function PrimarySearchAppBar() {
                 <p>Messages</p>
             </MenuItem>
             <MenuItem>
-                <IconButton
-                    size='large'
-                    aria-label='show 17 new notifications'
-                    color='inherit'
-                >
-                    <Badge badgeContent={17} color='error'>
-                        <NotificationsNone />
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
+                <NotificationsPopover /><p>Notifications</p>
             </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
+            <MenuItem onClick={handleOpenProfileMenu as React.MouseEventHandler}>
                 <IconButton
                     size='large'
-                    aria-label='account of current user'
-                    aria-controls='primary-search-account-menu'
                     aria-haspopup='true'
                     color='inherit'
                 >
@@ -172,7 +142,6 @@ function PrimarySearchAppBar() {
                         size='large'
                         edge='start'
                         color='inherit'
-                        aria-label='open drawer'
                         sx={{ mr: 2 }}
                     >
                         <MenuIcon />
@@ -206,32 +175,38 @@ function PrimarySearchAppBar() {
                                 <MailOutline />
                             </Badge>
                         </IconButton>
-                        <IconButton
-                            size='large'
-                            aria-label='show 17 new notifications'
-                            color='inherit'
-                        >
-                            <Badge badgeContent={17} color='error'>
-                                <NotificationsNone />
-                            </Badge>
-                        </IconButton>
+                        <NotificationsPopover />
                         <IconButton
                             size='large'
                             edge='end'
-                            aria-label='account of current user'
-                            aria-controls={menuId}
                             aria-haspopup='true'
-                            onClick={handleProfileMenuOpen}
-                            color='inherit'
+                            onClick={handleOpenProfileMenu}
+                            color={open ? 'success' : 'inherit'}
                         >
                             <AccountCircleOutlined />
                         </IconButton>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleCloseProfileMenu}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                            sx={{
+                                mt: 1.5,
+                                ml: 0.75,
+                            }}
+                        >
+                            <MenuItem onClick={handleCloseProfileMenu}><Link className={classes.link} to={'/profile'}>My account</Link></MenuItem>
+                            <MenuItem onClick={handleCloseProfileMenu}><Link className={classes.link} to={'#'}>Logout</Link></MenuItem>
+                        </Menu>
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size='large'
                             aria-label='show more'
-                            aria-controls={mobileMenuId}
+                            aria-controls='primary-search-account-menu-mobile'
                             aria-haspopup='true'
                             onClick={handleMobileMenuOpen}
                             color='inherit'
@@ -242,7 +217,6 @@ function PrimarySearchAppBar() {
                 </Toolbar>
             </AppBar>
             {renderMobileMenu}
-            {renderMenu}
         </Box>
     );
 }

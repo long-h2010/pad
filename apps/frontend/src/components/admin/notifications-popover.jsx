@@ -17,6 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 
 import { fToNow } from '../../admin/utils/format-time';
 
@@ -30,7 +31,7 @@ const NOTIFICATIONS = [
     id: faker.string.uuid(),
     title: 'Your order is placed',
     description: 'waiting for shipping',
-    avatar: null,
+    avatar: '/public/images/avatars/avatar_1.jpg',
     type: 'order_placed',
     createdAt: set(new Date(), { hours: 10, minutes: 30 }),
     isUnRead: true,
@@ -39,7 +40,7 @@ const NOTIFICATIONS = [
     id: faker.string.uuid(),
     title: faker.person.fullName(),
     description: 'answered to your comment on the Minimal',
-    avatar: '/assets/images/avatars/avatar_2.jpg',
+    avatar: '/public/images/avatars/avatar_2.jpg',
     type: 'friend_interactive',
     createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
     isUnRead: true,
@@ -99,9 +100,16 @@ export default function NotificationsPopover() {
 
   return (
     <>
-      <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen}>
+      <style>
+        {`
+          .simplebar-placeholder {
+            display: none
+          }
+        `}
+      </style>
+      <IconButton color={open ? 'success' : 'default'} onClick={handleOpen}>
         <Badge badgeContent={totalUnRead} color="error">
-          <Iconify width={24} icon="solar:bell-bing-bold-duotone" />
+          <NotificationsNoneOutlinedIcon/>
         </Badge>
       </IconButton>
 
@@ -121,7 +129,7 @@ export default function NotificationsPopover() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">Notifications</Typography>
+            <Typography variant="h6">Notifications</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               You have {totalUnRead} unread messages
             </Typography>
@@ -129,7 +137,7 @@ export default function NotificationsPopover() {
 
           {totalUnRead > 0 && (
             <Tooltip title=" Mark all as read">
-              <IconButton color="primary" onClick={handleMarkAllAsRead}>
+              <IconButton color='success' onClick={handleMarkAllAsRead}>
                 <Iconify icon="eva:done-all-fill" />
               </IconButton>
             </Tooltip>
@@ -142,7 +150,7 @@ export default function NotificationsPopover() {
           <List
             disablePadding
             subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline', fontWeight: "bold" }}>
                 New
               </ListSubheader>
             }
@@ -155,7 +163,7 @@ export default function NotificationsPopover() {
           <List
             disablePadding
             subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline', fontWeight: "bold" }}>
                 Before that
               </ListSubheader>
             }
@@ -169,7 +177,7 @@ export default function NotificationsPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple>
+          <Button fullWidth disableRipple color='success'>
             View All
           </Button>
         </Box>
@@ -202,12 +210,12 @@ function NotificationItem({ notification }) {
         px: 2.5,
         mt: '1px',
         ...(notification.isUnRead && {
-          bgcolor: 'action.selected',
+          bgcolor: 'rgba(46, 125, 50, 0.16)',
         }),
       }}
     >
       <ListItemAvatar>
-        <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
+        <Avatar sx={{ bgcolor: 'rgba(46, 125, 50, 0.1)' }}>{avatar}</Avatar>
       </ListItemAvatar>
       <ListItemText
         primary={title}
@@ -244,25 +252,25 @@ function renderContent(notification) {
 
   if (notification.type === 'order_placed') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_package.svg" />,
+      avatar: <img alt={notification.title} src="/public/icons/ic_notification_package.svg" />,
       title,
     };
   }
   if (notification.type === 'order_shipped') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_shipping.svg" />,
+      avatar: <img alt={notification.title} src="/public/icons/ic_notification_shipping.svg" />,
       title,
     };
   }
   if (notification.type === 'mail') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_mail.svg" />,
+      avatar: <img alt={notification.title} src="/public/icons/ic_notification_mail.svg" />,
       title,
     };
   }
   if (notification.type === 'chat_message') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_chat.svg" />,
+      avatar: <img alt={notification.title} src="/public/icons/ic_notification_chat.svg" />,
       title,
     };
   }

@@ -11,6 +11,7 @@ import LinkLine from '../../components/link-line';
 import LinkBack from '../../components/link-back';
 import ErrorMessage from '../../components/error-message';
 
+
 function Login() {
     const navigateTo = useNavigate();
     const { auth_url } = useGlobalContext();
@@ -84,7 +85,7 @@ function Login() {
                             <Box>
                                 <Link to={'/reset-password'}>
                                     <Typography
-                                        sx={{ margin: 0, color: '#37b85e' }}
+                                        sx={{ margin: 0, color: '#37b85e', textDecoration: "none" }}
                                         variant='subtitle1'
                                         gutterBottom
                                     >

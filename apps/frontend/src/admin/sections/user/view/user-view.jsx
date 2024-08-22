@@ -117,7 +117,7 @@ export default function UserView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4" sx={{fontWeight: "bold" }}>{openTable ? 'Users' : 'Documents'}</Typography>
 
-        <Button variant="contained" sx={{ backgroundColor: "rgb(33, 43, 54)"}} startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button color='success' variant="contained" sx={{ backgroundColor: "rgb(33, 43, 54)"}} startIcon={<Iconify icon="eva:plus-fill" />}>
         {openTable ? 'New User' : 'New Document'}
         </Button>
       </Stack>

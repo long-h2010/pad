@@ -8,7 +8,6 @@ import Profile from "./pages/profile/profile";
 import NotFound from "./pages/not-found/not-found";
 import DashboardLayout from "./admin/layouts/index"
 import UserPage from "./pages/admin/user"
-import DocumentPage from "./pages/admin/document"
 import AppPage from "./pages/admin/dashboard"
 import LoginPage from "./pages/admin/login"
 import { HelmetProvider } from 'react-helmet-async';

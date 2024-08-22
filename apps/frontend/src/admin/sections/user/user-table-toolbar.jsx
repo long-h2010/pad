@@ -26,7 +26,7 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
       }}
     >
       {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
+        <Typography component="div" sx={{color: "rgb(27, 94, 32)"}} variant="subtitle1">
           {numSelected} selected
         </Typography>
       ) : (

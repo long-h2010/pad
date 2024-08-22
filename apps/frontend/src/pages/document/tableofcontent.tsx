@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './tableofcontent.css';
 import { useHeadsObserver } from './hooks';
+import { Link, Typography } from '@mui/material';
 
 type Heading = {
   id: string;
@@ -68,22 +69,22 @@ const TableOfContent: React.FC<any> = (props) => {
 
   return (
     <nav>
-      {headings.length > 0 && (<h5 style={{ color: "black", fontWeight: "bold" }}>Table of contents</h5>)}
+      {headings.length > 0 && (<Typography variant='h5' sx={{ color: "black", fontWeight: "bold" }}>Table of contents</Typography>)}
       <ul>
         {headings.map(heading => (
           <li
             key={heading.id}
             className={getClassName(heading.level) || ''}
           >
-            <a
-              style={{ fontWeight: activeId === heading.id ? "bold" : "normal" }}
+            <Link
+              sx={{ fontWeight: activeId === heading.id ? "bold" : "normal", fontSize: "20px", textDecoration: "none" }}
               href={`#${heading.id}`}
               onClick={(e) => {
                 scrollElement(e, heading.id)
               }}
             >
               {heading.text}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

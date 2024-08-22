@@ -50,6 +50,7 @@ const LoginStyles = makeStyles()(() => {
             width: '100%',
             margin: '10px auto',
             backgroundColor: 'white',
+            '--Input-focusedHighlight': '#49995f !important'
         },
         btn: {
             width: '100%',
@@ -60,7 +61,7 @@ const LoginStyles = makeStyles()(() => {
             fontWeight: 'bold',
             textTransform: 'none',
             '&:hover': {
-                backgroundColor: '#37b85e',
+                backgroundColor: '#49995f',
                 cursor: 'pointer',
             },
         },

@@ -32,6 +32,7 @@ export default function UserTableHead({
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
+            color='success'
           />
         </TableCell>
 

@@ -22,6 +22,7 @@ const FieldInput: React.FC<any> = (props) => {
                 placeholder={placeholder}
                 variant='outlined'
                 color='neutral'
+                sx={{ '--Input-focusedHighlight': '#49995f !important' }}
                 onChange={(e) => setElement(e.target.value)}
                 value={value}
             />

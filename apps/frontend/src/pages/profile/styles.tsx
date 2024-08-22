@@ -59,7 +59,7 @@ const ProfileStyles = makeStyles()(() => {
             "&.Mui-selected": {
                 color: 'green',
                 fontWeight: 'bold',
-                backgroundColor: "#caf0c7"
+                backgroundColor: "rgba(46, 125, 50, 0.16)"
             },
         },
         subtitle: {

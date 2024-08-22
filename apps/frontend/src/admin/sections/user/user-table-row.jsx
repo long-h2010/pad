@@ -40,7 +40,7 @@ export default function UserTableRow({
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={handleClick} />
+          <Checkbox disableRipple checked={selected} color='success' onChange={handleClick} />
         </TableCell>
 
         <TableCell component="th" scope="row" padding="none">
