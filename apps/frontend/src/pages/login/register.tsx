@@ -3,17 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Button, Checkbox, Container, Typography } from '@mui/material';
 import { AccountCircle, Email, Key } from '@mui/icons-material';
-import LoginStyles from './styles';
-import FieldInput from '../../components/field-input';
-import LinkLine from '../../components/link-line';
-import LinkBack from '../../components/link-back';
-import ErrorMessage from '../../components/error-message';
+import LoginStyles from '../../assets/styles/login';
+import FieldInput from '../../components/inputs/field-input';
+import LinkLine from '../../components/link/link-line';
+import BackTo from '../../components/link/back-to';
+import ErrorMessage from '../../components/notification-message/error-message';
 import { useGlobalContext } from '../../context';
-import AlertMessage from '../../components/alert';
 
 function Register() {
     const navigateTo = useNavigate();
-    const { auth_url, setAlertMessage, setShowAlert, error, setError } = useGlobalContext();
+    const { auth_url, setAlertInfor, setShowAlert, error, setError } = useGlobalContext();
     const { classes } = LoginStyles();
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
@@ -31,7 +30,7 @@ function Register() {
                 name: name,
                 username: username,
                 email: email,
-                password: password
+                password: password,
             };
 
             for (let i in signupData) {
@@ -44,7 +43,7 @@ function Register() {
             axios
                 .post(`${auth_url}/register`, signupData)
                 .then(() => {
-                    setAlertMessage('Sign up successful');
+                    setAlertInfor(['success', 'Sign up successful']);
                     setShowAlert(true);
                     setError('');
                     setTimeout(() => {
@@ -53,47 +52,96 @@ function Register() {
                 })
                 .catch((err) => {
                     setError(err.response.data.message);
-                });
+                })
         }
     };
 
     return (
-        <Container sx={{ zIndex: 10 }}>
-            <LinkBack {...{ classes: classes, title: 'loginpage', href: '/login' }} />
+        <Container sx={{ zIndex: 10, height: '800px', position: 'relative' }}>
+            <BackTo {...{ page: 'Home page', href: '/' }} />
             <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
-                    <Box>
+                    <Box sx={{ height: 'fit-content' }}>
                         <Typography className={classes.title} variant='h4'>
                             Sign up
                         </Typography>
-                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Fullname', type: 'text', icon: <AccountCircle className={classes.iconInput} />, placeholder: 'Enter your fullname', setElement: setName }} />
-                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Username', type: 'text', icon: <AccountCircle className={classes.iconInput} />, placeholder: 'Enter your username', setElement: setUsername }} />
-                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Email', type: 'email', icon: <Email className={classes.iconInput} />, placeholder: 'Enter your email', setElement: setEmail }} />
-                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Password', type: 'password', icon: <Key className={classes.iconInput} />, placeholder: 'Enter your password', setElement: setPassword }} />
-                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Comfirm password', type: 'password', icon: <Key className={classes.iconInput} />, placeholder: 'Enter confirm password', setElement: setConfirmPassword }} />
-                        {(error !== '') ? <ErrorMessage {...{ message: error }} /> : <></>}
+                        <FieldInput
+                            {...{
+                                classNameTitle: classes.subtitle,
+                                classNameInput: classes.input,
+                                title: 'Fullname',
+                                type: 'text',
+                                icon: <AccountCircle className={classes.iconInput} />,
+                                placeholder: 'Enter your fullname',
+                                setValue: setName,
+                            }}
+                        />
+                        <FieldInput
+                            {...{
+                                classNameTitle: classes.subtitle,
+                                classNameInput: classes.input,
+                                title: 'Username',
+                                type: 'text',
+                                icon: <AccountCircle className={classes.iconInput} />,
+                                placeholder: 'Enter your username',
+                                setValue: setUsername,
+                            }}
+                        />
+                        <FieldInput
+                            {...{
+                                classNameTitle: classes.subtitle,
+                                classNameInput: classes.input,
+                                title: 'Email',
+                                type: 'email',
+                                icon: <Email className={classes.iconInput} />,
+                                placeholder: 'Enter your email',
+                                setValue: setEmail,
+                            }}
+                        />
+                        <FieldInput
+                            {...{
+                                classNameTitle: classes.subtitle,
+                                classNameInput: classes.input,
+                                title: 'Password',
+                                type: 'password',
+                                icon: <Key className={classes.iconInput} />,
+                                placeholder: 'Enter your password',
+                                setValue: setPassword,
+                            }}
+                        />
+                        <FieldInput
+                            {...{
+                                classNameTitle: classes.subtitle,
+                                classNameInput: classes.input,
+                                title: 'Comfirm password',
+                                type: 'password',
+                                icon: <Key className={classes.iconInput} />,
+                                placeholder: 'Enter confirm password',
+                                setValue: setConfirmPassword,
+                            }}
+                        />
+                        {error !== '' ? <ErrorMessage {...{ message: error }} /> : <></>}
                         <Box className={classes.condition}>
-                            <Checkbox
-                                className={classes.checkbox}
-                            />
+                            <Checkbox className={classes.checkbox} />
                             <Typography sx={{ margin: 0 }} variant='subtitle2' gutterBottom>
                                 I agree to the terms and conditions
                             </Typography>
                         </Box>
                         <form onSubmit={handelSubmitSignup}>
-                            <Button
-                                type='submit'
-                                className={classes.btn}
-                                variant='contained'
-                            >
+                            <Button type='submit' className={classes.btn} variant='contained'>
                                 Sign Up
                             </Button>
                         </form>
-                        <LinkLine {...{ content: 'Already have an account?', link: 'Login here', href: '/login' }} />
+                        <LinkLine
+                            {...{
+                                content: 'Already have an account?',
+                                link: 'Login here',
+                                href: '/login',
+                            }}
+                        />
                     </Box>
                 </Box>
             </Container>
-            <AlertMessage />
         </Container>
     );
 }

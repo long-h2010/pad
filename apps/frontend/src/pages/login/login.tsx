@@ -5,12 +5,13 @@ import { useGlobalContext } from '../../context';
 import { Box, Button, Container, Checkbox, Typography } from '@mui/material';
 import { AccountCircle, Lock } from '@mui/icons-material';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
-import LoginStyles from './styles';
-import FieldInput from '../../components/field-input';
-import LinkLine from '../../components/link-line';
-import LinkBack from '../../components/link-back';
-import ErrorMessage from '../../components/error-message';
-
+import FieldInput from '../../components/inputs/field-input';
+import LinkLine from '../../components/link/link-line';
+import BackTo from '../../components/link/back-to';
+import ErrorMessage from '../../components/notification-message/error-message';
+import LoginStyles from '../../assets/styles/login';
+import DefaultAvatar from '/images/default-user-avatar.jpg';
+import requestApi from '../../hooks/useApi';
 
 function Login() {
     const navigateTo = useNavigate();
@@ -33,15 +34,17 @@ function Login() {
             }
         }
 
-        axios
-            .post(`${auth_url}/login`, loginData)
+        requestApi(`${auth_url}/login`, 'post', loginData)
             .then((res) => {
-                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('token', res.data.accessToken);
+                localStorage.setItem('refreshToken', res.data.refreshToken);
+                localStorage.setItem('name', res.data.name);
+                localStorage.setItem('avatar', res.data.avatar || DefaultAvatar);
                 navigateTo('/');
             })
             .catch((err) => {
                 setError(err.response.data.message);
-            });
+            })
     };
 
     const handleGoogleLogin = async (credentialResponse: any) => {
@@ -49,12 +52,15 @@ function Login() {
         axios
             .post(`${auth_url}/google/login`, { token: token })
             .then((res) => {
-                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('token', res.data.accessToken);
+                localStorage.setItem('refreshToken', res.data.refreshToken);
+                localStorage.setItem('name', res.data.name);
+                localStorage.setItem('avatar', res.data.avatar || DefaultAvatar);
                 navigateTo('/');
             })
             .catch((err) => {
                 setError(err.response.data.message);
-            });
+            })
     };
 
     const handleGoogleLoginFailed = async () => {
@@ -63,15 +69,15 @@ function Login() {
 
     return (
         <Container sx={{ zIndex: 10 }}>
-            <LinkBack {...{ classes: classes, title: 'homepage', href: '/' }} />
+            <BackTo {...{ page: 'Home page', href: '/' }} />
             <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
                         <Typography className={classes.title} variant='h4'>
                             Sign in
                         </Typography>
-                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Username', type: 'text', icon: <AccountCircle className={classes.iconInput} />, placeholder: 'Enter your username', setElement: setUsername }} />
-                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Password', type: 'password', icon: <Lock className={classes.iconInput} />, placeholder: 'Enter your password', setElement: setPassword }} />
+                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Username', type: 'text', icon: <AccountCircle className={classes.iconInput} />, placeholder: 'Enter your username', setValue: setUsername }} />
+                        <FieldInput {...{ classNameTitle: classes.subtitle, classNameInput: classes.input, title: 'Password', type: 'password', icon: <Lock className={classes.iconInput} />, placeholder: 'Enter your password', setValue: setPassword }} />
                         {(error !== '') ? <ErrorMessage {...{ message: error }} /> : <></>}
                         <Box className={classes.frameRemember}>
                             <Box className={classes.condition}>
@@ -85,7 +91,7 @@ function Login() {
                             <Box>
                                 <Link to={'/reset-password'}>
                                     <Typography
-                                        sx={{ margin: 0, color: '#37b85e', textDecoration: "none" }}
+                                        sx={{ margin: 0, color: '#37b85e' }}
                                         variant='subtitle1'
                                         gutterBottom
                                     >

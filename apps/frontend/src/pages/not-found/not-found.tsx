@@ -1,12 +1,12 @@
 import { Button, Container } from '@mui/material';
-// import NotFoundImage from '../../assets/404.svg';
+import NotFoundImage from '../../assets/background/404.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 function NotFound() {
     return (
         <Container sx={{ justifyContent: 'center', textAlign: 'center' }}>
-            <img style={{maxHeight: '50vh', marginTop: '10vh'}}/>
+            <img src={NotFoundImage} style={{maxHeight: '50vh', marginTop: '10vh'}}/>
             <h1 className='text-primary mt-5'>
                 PAGE <span className='fw-bolder'>NOT FOUND</span>
             </h1>

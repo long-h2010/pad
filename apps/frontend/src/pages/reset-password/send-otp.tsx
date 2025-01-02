@@ -2,12 +2,12 @@ import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { AccountCircle, LockOutlined } from '@mui/icons-material';
 import { Input } from '@mui/joy';
-import ErrorMessage from '../../components/error-message';
+import ErrorMessage from '../../components/notification-message/error-message';
+import LoginStyles from '../../assets/styles/login';
+
 const SendOTP: React.FC<any> = (props) => {
-    const classes = props.classes;
-    const setUsername = props.setUsername;
-    const error = props.error;
-    const handleSendOtp = props.handleSendOtp;
+    const { classes } = LoginStyles();
+    const { setUsername, error, handleSendOtp } = props;
 
     return (
         <>

@@ -1,32 +1,17 @@
-import React, { useRef, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Female, Male } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import FieldInput from '../../components/field-input';
-import ErrorMessage from '../../components/error-message';
-import ProfileStyles from './styles';
+import FieldInput from '../../components/inputs/field-input';
+import ErrorMessage from '../../components/notification-message/error-message';
+import ProfileStyles from '../../assets/styles/profile';
+import dayjs from 'dayjs';
 
 const Information: React.FC<any> = (props) => {
     const { classes } = ProfileStyles();
     const { fullname, setFullname, gender, setGender, birthday, setBirthday, email, setEmail, nickname, setNickname, handleUpdateInfo, error } = props;
-    const [activeGender, setActiveGender] = useState(gender);
-    const maleBox = useRef<HTMLDivElement>(null);
-    const femaleBox = useRef<HTMLDivElement>(null);
-
-    const handleClickChangeGender = (element: string) => {
-        if (activeGender !== element) {
-            if (maleBox.current && femaleBox.current) {
-                maleBox.current.style.color = element === 'male' ? '#289bed' : 'rgb(79, 79, 79)';
-                femaleBox.current.style.color = element === 'female' ? 'red' : 'rgb(79, 79, 79)';
-            }
-
-            setActiveGender(element);
-            setGender(element);
-        }
-    };
 
     return (
         <>
@@ -44,7 +29,7 @@ const Information: React.FC<any> = (props) => {
                             icon: '',
                             value: fullname,
                             placeholder: 'Enter your fullname',
-                            setElement: setFullname,
+                            setValue: setFullname,
                         }}
                     />
                 </Box>
@@ -59,8 +44,7 @@ const Information: React.FC<any> = (props) => {
                     <Box sx={{ display: 'flex' }}>
                         <Box
                             className={classes.boxGender}
-                            onClick={() => handleClickChangeGender('male')}
-                            ref={maleBox}
+                            onClick={() => setGender('male')}
                             sx={{color: (gender === 'male') ? '#289bed' : 'rgb(79, 79, 79)'}}
                         >
                             <Male sx={{ fontSize: '34px' }} />
@@ -70,8 +54,7 @@ const Information: React.FC<any> = (props) => {
                         </Box>
                         <Box
                             className={classes.boxGender}
-                            onClick={() => handleClickChangeGender('female')}
-                            ref={femaleBox}
+                            onClick={() => setGender('female')}
                             sx={{color: (gender === 'female') ? 'red' : 'rgb(79, 79, 79)'}}
                         >
                             <Female sx={{ fontSize: '34px' }} />
@@ -93,7 +76,7 @@ const Information: React.FC<any> = (props) => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DemoContainer components={['DatePicker']}>
                                 <DatePicker
-                                    // value={birthday}
+                                    format='DD/MM/YYYY'
                                     slotProps={{
                                         textField: {
                                             size: 'small',
@@ -110,18 +93,20 @@ const Information: React.FC<any> = (props) => {
                                                 },
                                                 '& .MuiOutlinedInput-root': {
                                                     '& fieldset': {
-                                                        borderColor: 'rgb(237, 237, 237)', // Change border color
+                                                        borderColor: 'rgb(237, 237, 237)', 
                                                     },
                                                     '&:hover fieldset': {
-                                                        borderColor: 'darkgreen', // Change border color on hover
+                                                        borderColor: 'darkgreen',
                                                     },
                                                     '&.Mui-focused fieldset': {
-                                                        borderColor: 'darkgreen', // Change border color when focused
+                                                        borderColor: 'darkgreen',
                                                     },
-                                                },
-                                            },
-                                        },
+                                                }
+                                            }
+                                        }
                                     }}
+                                    onChange={(e: any) => setBirthday(e)}
+                                    value={dayjs(birthday)}
                                 />
                             </DemoContainer>
                         </LocalizationProvider>
@@ -134,10 +119,9 @@ const Information: React.FC<any> = (props) => {
                             classNameInput: classes.input,
                             title: 'Email',
                             type: 'email',
-                            icon: '',
                             value: email,
                             placeholder: 'Enter your email',
-                            setElement: setEmail,
+                            setValue: setEmail,
                         }}
                     />
                 </Box>
@@ -151,16 +135,12 @@ const Information: React.FC<any> = (props) => {
                             icon: '',
                             value: nickname,
                             placeholder: 'Enter your nickname',
-                            setElement: setNickname,
+                            setValue: setNickname,
                         }}
                     />
                 </Box>
                 {error !== '' ? <ErrorMessage {...{ message: error }} /> : <></>}
-                <Box
-                    sx={{
-                        float: 'right',
-                    }}
-                >
+                <Box sx={{ float: 'right' }} >
                     <Button variant='contained' color='success' onClick={handleUpdateInfo} className={classes.btnSave}>
                         Save
                     </Button>
@@ -170,4 +150,4 @@ const Information: React.FC<any> = (props) => {
     );
 };
 
-export default Information;
+export default Information

@@ -17,14 +17,19 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('register')
-    async register(@Body(ValidationPipe) registerDto: RegisterDto): Promise<{ token: string }> {
+    async register(@Body(ValidationPipe) registerDto: RegisterDto) {
         return await this.authService.register(registerDto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    async login(@Body(ValidationPipe) loginDto: LoginDto): Promise<{ token: string }> {
+    async login(@Body(ValidationPipe) loginDto: LoginDto) {
         return await this.authService.login(loginDto);
+    }
+
+    @Post('refresh-token')
+    async refreshToken(@Body('refreshToken') refreshToken: string) {
+        return await this.authService.refreshToken(refreshToken);
     }
 
     @Post('google/login')

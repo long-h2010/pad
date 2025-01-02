@@ -1,17 +1,16 @@
 import { Autocomplete, TextField } from '@mui/material';
-import { User } from '../../../components/user-item';
-import UserChip from '../../../components/user-chip';
-import GroupStyles from './style';
+import { User } from '../../../components/user/user-item';
+import UserChip from '../../../components/user/user-chip';
+import GroupStyles from '../../../assets/styles/group';
 
 const SearchUser: React.FC<any> = (props) => {
     const { classes } = GroupStyles();
-    const { listSearch, handleClickSearchItem, setSearchValue, listUser, handleDeleteSearchItem } = props;
+    const { listSearch, handleClickSearchItem, setSearchValue, listUserSearched, handleDeleteSearchItem } = props;
 
     return (
         <Autocomplete
             multiple
             limitTags={1}
-            id='tags-outlined'
             filterSelectedOptions
             options={listSearch}
             getOptionLabel={(option: any) => option.nickname}
@@ -29,7 +28,7 @@ const SearchUser: React.FC<any> = (props) => {
                     />
                 )
             }}
-            value={listUser}
+            value={listUserSearched}
             isOptionEqualToValue={(option, value) => option.nickname === value.nickname}
             renderTags={(value: any, getTagProps) =>
                 value.map((option: any, index: number) => {

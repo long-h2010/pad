@@ -15,6 +15,14 @@ export class UserService {
         private userModel: Model<User>
     ) {}
 
+    async findAll() {
+        return await this.userModel.find();
+    }
+
+    async totalUser() {
+        return await this.userModel.find().countDocuments();
+    }
+
     async create(createUserDto: CreateUserDto) {
         let nickname = '';
         do { 
@@ -32,9 +40,17 @@ export class UserService {
         return user;
     }
 
-    async findUsersByNickName(nickname: string) {
-        const regex = RegExp(nickname, 'i');
-        return await this.userModel.find({ nickname: { $regex: regex } });
+    async findUsers(name: string) {
+        const regex = RegExp(name, 'i');
+
+        const query = {
+            $or: [
+                { name: { $regex: regex } },
+                { nickname: { $regex: regex } }
+            ]
+        };
+
+        return await this.userModel.find(query);
     }
 
     async findById(id: string) {
@@ -48,7 +64,7 @@ export class UserService {
         return user;
     }
 
-    async getNameById(id: string) {
+    async getNameById(id: string) { 
         const user = await this.userModel.findById(id);
         if(!user) throw new BadRequestException('User is not exists');
         return user.name;

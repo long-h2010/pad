@@ -10,11 +10,14 @@ export class Document {
     @Prop()
     content: string;
 
+    @Prop()
+    thumbnail: string;
+
     @Prop({type: [String], default: []})
     tags: string[];
 
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-    owners: User[];
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User'  })
+    owner: User;
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
     writers: User[];

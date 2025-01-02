@@ -12,11 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const StyledBadgeOnline = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {

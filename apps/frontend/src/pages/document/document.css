@@ -6,7 +6,8 @@
 .tox .tox-editor-container {
     align-items: center;
     height: max-content !important;
-    background-color: white;
+    background-color: rgb(243, 243, 243);
+    position: relative;
 }
 
 .tox .tox-editor-header {
@@ -22,11 +23,15 @@
 .tox .tox-edit-area {
     width: 794px;
     height: 1123px;
-    outline: 1px solid #c7c7c7;
+    outline: 1px solid rgb(243, 243, 243);
 }
 
 .tox .tox-edit-area::before {
     border: none !important;
+}
+
+.tox .tox-menubar {
+    margin-left: 50px;
 }
 
 .list-user-title {
@@ -68,7 +73,7 @@
 .icon.open {
     display: block;
     position: absolute;
-    right: 25%;
+    right: 20%;
     z-index: 1;
 }
 
@@ -92,4 +97,16 @@
     z-index: 1;
     padding: 20px;
     display: block;
+}
+
+.spelling {
+    display: none;
+}
+
+.spelling.open {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
 }

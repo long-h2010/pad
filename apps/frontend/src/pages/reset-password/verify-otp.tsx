@@ -1,13 +1,13 @@
 import { List, Typography } from '@mui/material';
 import { Pin } from '@mui/icons-material';
-import OTPInput from '../../components/otp-input';
-import LinkLine from '../../components/link-line';
-import ErrorMessage from '../../components/error-message';
+import OTPInput from '../../components/inputs/otp-input';
+import LinkLine from '../../components/link/link-line';
+import ErrorMessage from '../../components/notification-message/error-message';
+import LoginStyles from '../../assets/styles/login';
 
 const VerifyOTP: React.FC<any> = (props) => {
-    const classes = props.classes;
-    const error = props.error;
-    const handleVerifyOtp = props.handleVerifyOtp
+    const { classes } = LoginStyles();
+    const { error, handleVerifyOtp } = props;
 
     return (
         <>

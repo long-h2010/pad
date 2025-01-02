@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Container, Tab, Tabs, Typography } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { Avatar, Box, Container, IconButton, Tab, Tabs, Typography } from '@mui/material';
+import { CameraAlt } from '@mui/icons-material';
 import axios from 'axios';
-import PrimarySearchAppBar from '../../components/appbar';
-import ChangePassword from './change-password';
+import PrimarySearchAppBar from '../../components/sections/appbar';
+import ChangePassword from './password';
 import Information from './information';
-import ProfileStyles from './styles';
+import ProfileStyles from '../../assets/styles/profile';
 import { useGlobalContext } from '../../context';
 
 interface TabPanelProps {
@@ -36,17 +37,18 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
     return {
         id: `vertical-tab-${index}`,
-        'aria-controls': `vertical-tabpanel-${index}`
+        'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
 
 function Profile() {
-    const { user_url, cloud_url, error, setError } = useGlobalContext();
-    const { classes } = ProfileStyles();
     const token = localStorage.getItem('token');
+    const userAvatar = localStorage.getItem('avatar') as string;
+    const { user_url, cloud_url, error, setError, setAlertInfor, setShowAlert } = useGlobalContext();
+    const fileUploadRef = useRef(null);
+    const { classes } = ProfileStyles();
     const [value, setValue] = React.useState(0);
-    const [avatar, setAvatar] = useState(null);
-    const [avatarUrl, setAvatarUrl] = useState('');
+    const [avatar, setAvatar] = useState('');
     const [fullname, setFullname] = useState('');
     const [gender, setGender] = useState('male');
     const [birthday, setBirthday] = useState('');
@@ -58,19 +60,18 @@ function Profile() {
 
     useEffect(() => {
         axios
-            .get(`${user_url}/`, { headers: { Authorization: `Bearer ${token}` } })
+            .get(`${user_url}/`, { headers: { authorization: `Bearer ${token}` } })
             .then((res) => {
                 const user = res.data;
-                setAvatarUrl(user.avatar)
+                setAvatar(userAvatar);
                 setFullname(user.name);
                 setGender(user.gender);
-                setBirthday(user.birthday ? user.birthday : undefined);
-                // setBirthday(format(user.birthday, `dd:mm:yy`));
+                setBirthday(user.birthday ? user.birthday : null);
                 setEmail(user.email);
                 setNickname(user.nickname);
             })
-            .catch((err) => console.log(err))
-    }, [])
+            .catch((err) => console.log(err));
+    }, []);
 
     const handleChangeTap = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -82,43 +83,53 @@ function Profile() {
             gender: gender,
             birthday: birthday,
             email: email,
-            nickname: nickname
+            nickname: nickname,
         };
 
         axios
             .post(`${user_url}/update-information`, {
                 Authorization: `Bearer ${token}`,
-                updateData
+                updateData,
             })
-            .then((res) => console.log(res))
+            .then((res) => {
+                const data = res.data.message;
+                setAlertInfor(['success', data]);
+                setShowAlert(true);
+            })
             .catch((err) => setError(err.response.data.message))
     };
 
-    const handleUpdateAvatar = () => {
-        const file = new FormData();
-        file.append('avatar', avatar as any)
-        console.log(file)
+    const handleUpdateAvatar = (image: any) => {
+        if (image) {    
+            const file = new FormData();
+            file.append('avatar', image);
 
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`
-            },
-        };
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
+                }
+            };
 
-        axios
-            .post(`${cloud_url}/update-avatar`, file, config)
-            .then((res) => console.log(res.data.message))
-            .catch((err) => setError(err.response.data.message))
-    }
+            axios
+                .post(`${cloud_url}/update-avatar`, file, config)
+                .then((res) => {
+                    setAvatar(res.data.secure_url);
+                    localStorage.setItem('avatar', res.data.secure_url);
+                    setAlertInfor(['success', 'Update avatar successfully']);
+                    setShowAlert(true);
+                })
+                .catch((err) => setError(err.response.data.message))
+        }
+    };
 
     const handleChangePassword = () => {
         if (newPassword !== confirmNewPassword) {
-            setError('New password and password confirm don\'t match!')
+            setError('New password and password confirm don\'t match!');
         } else {
             const passwordData: any = {
                 oldPassword: oldPassword,
-                newPassword: newPassword
+                newPassword: newPassword,
             };
 
             for (let i in passwordData) {
@@ -131,12 +142,19 @@ function Profile() {
             axios
                 .post(`${user_url}/change-password`, {
                     Authorization: `Bearer ${token}`,
-                    passwordData
+                    passwordData,
                 })
-                .then((res) => console.log(res.data.message))
+                .then((res) => {
+                    const data = res.data.message;
+                    setAlertInfor(['success', data]);
+                    setShowAlert(true);
+                })
                 .catch((err) => setError(err.response.data.message))
         }
     };
+
+    useEffect(() => setError(''), [value, avatar, fullname, gender, birthday, 
+        email, nickname, oldPassword, newPassword, confirmNewPassword]);
 
     return (
         <>
@@ -144,23 +162,56 @@ function Profile() {
             <Container sx={{ zIndex: 10 }}>
                 <style>
                     {`
-                        .css-10d9dml-MuiTabs-indicator {
-                            background-color: green;
-                        }
-                        .MuiTabs-scroller {
-                            width: 100%
-                        }
+                        .css-10d9dml-MuiTabs-indicator { background-color: green }
+                        .MuiTabs-scroller { width: 100% }
                     `}
                 </style>
                 <Box>
                     <Box className={classes.paper}>
                         <Box className={classes.paperLeft}>
-                            <Avatar
-                                className={classes.avatar}
-                                alt='Remy Sharp'
-                                src={avatarUrl}
-                            />
-                            <input type="file" onChange={(e: any) => setAvatar(e.target.files[0])} />
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    '&:hover .camera-icon': {
+                                        opacity: 1,
+                                    },
+                                    '&:hover [class*="Avatar"]': {
+                                        backgroundColor: '#ecebed',
+                                    },
+                                }}
+                                onClick={() => (fileUploadRef.current as any).click()}
+                            >
+                                <Avatar
+                                    className={classes.avatar}
+                                    alt='Avatar'
+                                    sx={{ cursor: 'pointer' }}
+                                    src={avatar}
+                                />
+                                <IconButton
+                                    className='camera-icon'
+                                    sx={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        opacity: 0,
+                                        transition: 'opacity 0.3s ease',
+                                        color: 'white',
+                                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                        '&:hover': {
+                                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                        },
+                                    }}
+                                >
+                                    <CameraAlt />
+                                </IconButton>
+                                <input
+                                    type='file'
+                                    onChange={(e: any) => handleUpdateAvatar(e.target.files[0])}
+                                    hidden
+                                    ref={fileUploadRef}
+                                />
+                            </Box>
                             <Typography className={classes.nameUser} variant='h5'>
                                 {fullname}
                             </Typography>
@@ -186,29 +237,33 @@ function Profile() {
                         </Box>
                         <Box className={classes.paperRight}>
                             <TabPanel value={value} index={0}>
-                                <Information {...{
-                                    fullname,
-                                    setFullname,
-                                    gender,
-                                    setGender,
-                                    birthday,
-                                    setBirthday,
-                                    email,
-                                    setEmail,
-                                    nickname,
-                                    setNickname,
-                                    handleUpdateInfo: handleUpdateAvatar,
-                                    error
-                                }} />
+                                <Information
+                                    {...{
+                                        fullname,
+                                        setFullname,
+                                        gender,
+                                        setGender,
+                                        birthday,
+                                        setBirthday,
+                                        email,
+                                        setEmail,
+                                        nickname,
+                                        setNickname,
+                                        handleUpdateInfo: handleUpdateInfo,
+                                        error,
+                                    }}
+                                />
                             </TabPanel>
                             <TabPanel value={value} index={1}>
-                                <ChangePassword {...{
-                                    setOldPassword,
-                                    setNewPassword,
-                                    setConfirmNewPassword,
-                                    handleChangePassword,
-                                    error
-                                }} />
+                                <ChangePassword
+                                    {...{
+                                        setOldPassword,
+                                        setNewPassword,
+                                        setConfirmNewPassword,
+                                        handleChangePassword,
+                                        error,
+                                    }}
+                                />
                             </TabPanel>
                         </Box>
                     </Box>

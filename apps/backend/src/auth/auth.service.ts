@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
@@ -17,7 +17,16 @@ export class AuthService {
         private userService: UserService,
     ) {}
 
-    async register(registerDto: RegisterDto): Promise<{ token: string }> {
+    async generateToken(uderId: string) {
+        const [accessToken, refreshToken] = await Promise.all([
+            this.jwtService.signAsync({ id: uderId }),
+            this.jwtService.signAsync({ id: uderId }, { expiresIn: '7d' }),
+        ]);
+
+        return { accessToken, refreshToken };
+    }
+
+    async register(registerDto: RegisterDto): Promise<{ accessToken: string, refreshToken: string }> {
         const { name, username, email, password } = registerDto;
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -33,11 +42,18 @@ export class AuthService {
 
         const user = await this.userService.create(data);
 
-        const token = await this.jwtService.signAsync({ id: user._id });
-        return { token };
+        const token = await this.generateToken(user._id.toString());
+        return token;
     }
 
-    async login(loginDto: LoginDto): Promise<{ token: string }> {
+    async refreshToken(refreshToken: string) {
+        const verify = await this.jwtService.verifyAsync(refreshToken, { secret: process.env.JWT_SECRET });
+        const user = this.userService.findById(verify.id);
+        if (user) return this.generateToken(verify.id);
+        else throw new HttpException('Refresh token is not valid', HttpStatus.BAD_REQUEST);
+    }
+
+    async login(loginDto: LoginDto) {
         const { username, password } = loginDto;
 
         const user = await this.userService.findByName(username);
@@ -46,17 +62,17 @@ export class AuthService {
         const isPasswordMatched = await bcrypt.compare(password, user.password);
         if (!isPasswordMatched) throw new UnauthorizedException('Invalid Username or password!');
 
-        const token = await this.jwtService.signAsync({ id: user._id });
-        return { token };
+        const token = await this.generateToken(user._id.toString());
+        return { accessToken: token.accessToken, refreshToken: token.refreshToken, name: user.nickname, avatar: user.avatar };
     }
 
-    async googleLogin(payload: any): Promise<{ token: string }> {
+    async googleLogin(payload: any) {
         const username = payload.email;
         const user = await this.userService.findByName(username);
 
         if (user) {
-            const token = await this.jwtService.signAsync({ id: user._id });
-            return { token };
+            const token = await this.generateToken(user._id.toString());
+            return { accessToken: token.accessToken, refreshToken: token.refreshToken, name: user.nickname, avatar: user.avatar };
         } else {
             const data = {
                 name: payload.name,
@@ -66,8 +82,8 @@ export class AuthService {
 
             const newUser = await this.userService.create(data);
 
-            const token = await this.jwtService.signAsync({ id: newUser._id });
-            return { token };
+            const token = await this.generateToken(newUser._id.toString());
+            return { accessToken: token.accessToken, refreshToken: token.refreshToken, name: user.nickname, avatar: user.avatar };
         }
     }
 

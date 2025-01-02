@@ -5,32 +5,36 @@ import axios from 'axios';
 import _, { debounce } from 'lodash';
 import { Box, Typography, Button, Dialog, DialogTitle, DialogActions, DialogContent, SelectChangeEvent, Select, MenuItem } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import GroupStyles from './style';
-import ListUser from './list-user';
-import RoleOfUser from '../../../components/users-role';
+import GroupStyles from '../../../assets/styles/group';
+import ListUserSearched from './list-user';
+import RoleOfUser from '../../../components/user/users-role';
 import SearchUser from './search-user';
 
 function UsersGroup() {
+    const token = localStorage.getItem('token');
     const { classes } = GroupStyles();
-    const docId = useParams().id;
-    const { doc_url, user_url, setShowAlert } = useGlobalContext();
+    const { id } = useParams();
+    const docId = atob(id as string);
+    const { doc_url, user_url, notification_url, setShowAlert } = useGlobalContext();
     const [open, setOpen] = useState(false);
-    const [owners, setOwners] = useState([]);
-    const [writers, setWriters] = useState([]);
-    const [readers, setReaders] = useState([]);
-    const [ownersTemp, setOwnersTemp] = useState([]);
-    const [writersTemp, setWritersTemp] = useState([]);
-    const [readersTemp, setReadersTemp] = useState([]);
+    const [owner, setOwner] = useState<any>({});
+    const [writers, setWriters] = useState<any[]>([]);
+    const [readers, setReaders] = useState<any[]>([]);
+    const [ownerTemp, setOwnerTemp] = useState([]);
+    const [writersTemp, setWritersTemp] = useState<any[]>([]);
+    const [readersTemp, setReadersTemp] = useState<any[]>([]);
     const [searchValue, setSearchValue] = useState('');
-    const [listSearch, setListSearch] = useState([]);
-    const [listUser, setListUser] = useState([]);
-    const [role, setRole] = useState('owners');
+    const [listSearch, setListSearch] = useState<any>([]);
+    const [listSendNotification, setListSendNotification] = useState<any[]>([]);
+    const [listUserSearched, setListUserSearched] = useState([]);
+    const [role, setRole] = useState('writers');
+    const [userRole, setUserRole] = useState('reader');
 
     const getUser = () => {
         axios
             .get(`${doc_url}/get-list-user/${docId}`)
             .then((res) => {
-                setOwners(res.data.owners);
+                setOwner(res.data.owner);
                 setWriters(res.data.writers);
                 setReaders(res.data.readers);
             })
@@ -43,64 +47,78 @@ function UsersGroup() {
         getUser();
     }, []);
 
-    const findUser = useCallback(debounce((value) => {
-        if (value)
-            axios
-                .get(`${user_url}/get-users/${value}`)
-                .then((res) => {
-                    const data = res.data;
-                    const nicknames = [...owners, ...writers, ...readers].map((user: any) => user.nickname);
-                    setListSearch(data.filter((user: any) => !nicknames.includes(user.nickname)));
-                })
-                .catch((err) => {
-                    console.log('Error when find user: ', err);
-                })
-        else
-            setListSearch([]);
-    }, 500), []);
+    useEffect(() => {
+        axios
+            .get(`${doc_url}/${docId}/get-role`, {
+                headers: { authorization: `Bearer ${token}` },
+            })
+            .then((res) => setUserRole(res.data))
+            .catch((err) => console.log(err))
+    }, []);
+
+    const findUser = useCallback(
+        debounce((value) => {
+            if (value)
+                axios
+                    .get(`${user_url}/get-users/${value}`)
+                    .then((res) => {
+                        const data = res.data;
+                        const nicknames = [owner, ...writers, ...readers].map((user: any) => user.nickname);
+                        setListSearch(data.filter((user: any) => !nicknames.includes(user.nickname)));
+                    })
+                    .catch((err) => {
+                        console.log('Error when find user: ', err);
+                    })
+            else setListSearch([]);
+        }, 500),
+        []
+    );
 
     useEffect(() => {
         findUser(searchValue);
     }, [searchValue, findUser]);
 
     const handleClickSearchItem = (user: any) => {
-        const nickname = listUser.filter((u: any) => (u.nickname === user.nickname));
-        if (nickname.length > 0)
-            return;
-        else
-            setListUser(([...listUser, user]) as any);
+        const nickname = listUserSearched.filter((u: any) => u.nickname === user.nickname);
+        if (nickname.length > 0) return;
+        else setListUserSearched([...listUserSearched, user] as any);
     };
 
     const handleDeleteSearchItem = (nickname: string) => {
-        setListUser(listUser.filter((user: any) => (user.nickname !== nickname)));
+        setListUserSearched(listUserSearched.filter((user: any) => user.nickname !== nickname));
     };
 
     const handleChangeRole = (e: SelectChangeEvent<typeof role>) => {
         setRole(e.target.value);
     };
 
-    const handleAddUser = () => {
-        if (role === 'owners')
-            setOwners([...owners, ...listUser]);
-        else if (role === 'writers')
-            setWriters([...writers, ...listUser]);
-        else if (role === 'readers')
-            setReaders([...readers, ...listUser]);
+    const handleSendNotification = (users: string[]) => {
+        axios
+            .post(`${notification_url}/send-notification`, {
+                Authorization: `Bearer ${token}`,
+                data: { to: users, docId: docId, type: 'add' },
+            })
+            .then((res) => console.log(res.data.message))
+            .catch((err) => console.log(err))
+    };
 
-        setListUser([]);
+    const handleAddUser = () => {
+        if (role === 'writers') setWriters([...writers, ...listUserSearched]);
+        else if (role === 'readers') setReaders([...readers, ...listUserSearched]);
+
+        setListSendNotification([...listSendNotification, ...listUserSearched]);
+        setListUserSearched([]);
     };
 
     const updateRole = () => {
         const nicknames = {
-            owners: owners.map((owner: any) => {
-                return owner.nickname;
-            }),
+            owner: owner.nickname,
             writers: writers.map((writer: any) => {
                 return writer.nickname;
             }),
             readers: readers.map((reader: any) => {
                 return reader.nickname;
-            })
+            }),
         };
 
         axios
@@ -113,22 +131,26 @@ function UsersGroup() {
 
     const handleOnDrag = (e: React.DragEvent, widget: any) => {
         e.dataTransfer.setData('widget', JSON.stringify(widget));
-        console.log(widget)
     };
 
     const handleOnDrop = (e: React.DragEvent, targetRole: string) => {
         const widget: any = JSON.parse(e.dataTransfer.getData('widget'));
 
-        setOwners(owners.filter((owner: any) => (owner.nickname !== widget.nickname)));
-        setWriters(writers.filter((writer: any) => (writer.nickname !== widget.nickname)));
-        setReaders(readers.filter((reader: any) => (reader.nickname !== widget.nickname)));
+        if (widget.nickname === owner.nickname) return;
+        setWriters(writers.filter((writer: any) => writer.nickname !== widget.nickname));
+        setReaders(readers.filter((reader: any) => reader.nickname !== widget.nickname));
 
-        if (targetRole === 'owner')
-            setOwners(_.uniqWith([...owners, widget], _.isEqual) as any);
-        else if (targetRole === 'writer')
-            setWriters(_.uniqWith([...writers, widget], _.isEqual) as any);
-        else if (targetRole === 'reader')
-            setReaders(_.uniqWith([...readers, widget], _.isEqual) as any);
+        if (targetRole === 'owner') {
+            setWriters([
+                ...writers.filter((writer: any) => writer.nickname !== widget.nickname),
+                owner,
+            ]);
+            setOwner(widget);
+        } else if (targetRole === 'writer') {
+            setWriters(_.uniqWith([...writers, widget], _.isEqual));
+        } else if (targetRole === 'reader') { 
+            setReaders(_.uniqWith([...readers, widget], _.isEqual));
+        }
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -136,27 +158,31 @@ function UsersGroup() {
     };
 
     const handleDeleteUser = (nickname: string) => {
-        setOwners(owners.filter((owner: any) => (owner.nickname !== nickname)));
-        setWriters(writers.filter((writer: any) => (writer.nickname !== nickname)));
-        setReaders(readers.filter((reader: any) => (reader.nickname !== nickname)));
+        setWriters(writers.filter((writer: any) => writer.nickname !== nickname));
+        setReaders(readers.filter((reader: any) => reader.nickname !== nickname));
     };
 
     const handleOpen = () => {
-        setOwnersTemp(owners);
-        setWritersTemp(writers);
-        setReadersTemp(readers);
-        setOpen(true);
+        if (userRole === 'owner') {
+            setOwnerTemp(owner);
+            setWritersTemp(writers);
+            setReadersTemp(readers);
+            setOpen(true);
+        }
     };
 
     const handleClose = () => setOpen(false);
 
     const handleSave = () => {
+        if (listSendNotification.length > 0)
+            handleSendNotification(listSendNotification.map((user: any) => user.nickname));
+
         updateRole();
         handleClose();
     };
 
     const handleCancel = () => {
-        setOwners(ownersTemp);
+        setOwner(ownerTemp);
         setWriters(writersTemp);
         setReaders(readersTemp);
         handleClose();
@@ -165,7 +191,11 @@ function UsersGroup() {
     return (
         <Box className={classes.boxContainer}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant='h6' sx={{fontSize: "20px !important"}} className={classes.headerTitle}>
+                <Typography
+                    variant='h6'
+                    sx={{ fontSize: '20px !important' }}
+                    className={classes.headerTitle}
+                >
                     Thêm người dùng mới
                 </Typography>
                 <Button sx={{ color: 'green' }} onClick={handleOpen}>
@@ -179,20 +209,26 @@ function UsersGroup() {
                 aria-describedby='alert-dialog-description'
             >
                 <DialogTitle id='alert-dialog-title'>
-                    <Typography className={classes.headerTitle}>
-                        CHIA SẺ TÀI LIỆU
-                    </Typography>
+                    <Typography className={classes.headerTitle}>CHIA SẺ TÀI LIỆU</Typography>
                 </DialogTitle>
                 <DialogContent sx={{ display: 'flex' }}>
-                    <SearchUser {...{ listSearch, handleClickSearchItem, setSearchValue, listUser, handleDeleteSearchItem }} />
+                    <SearchUser
+                        {...{
+                            listSearch,
+                            handleClickSearchItem,
+                            setSearchValue,
+                            listUserSearched,
+                            handleDeleteSearchItem,
+                        }}
+                    />
                     <Select
                         labelId='demo-simple-select-helper-label'
                         id='demo-simple-select-helper'
                         value={role}
+                        color='success'
                         className={classes.selectRule}
                         onChange={handleChangeRole}
                     >
-                        <MenuItem value='owners'>Người sở hữu</MenuItem>
                         <MenuItem value='writers'>Người chỉnh sửa</MenuItem>
                         <MenuItem value='readers'>Người xem</MenuItem>
                     </Select>
@@ -201,9 +237,42 @@ function UsersGroup() {
                     </Button>
                 </DialogContent>
                 <DialogContent>
-                    <RoleOfUser {...{ classes, title: 'Người sở hữu', role: 'owner', users: owners, handleOnDrop, handleDragOver, handleOnDrag, handleDeleteUser }} />
-                    <RoleOfUser {...{ classes, title: 'Người chỉnh sửa', role: 'writer', users: writers, handleOnDrop, handleDragOver, handleOnDrag, handleDeleteUser }} />
-                    <RoleOfUser {...{ classes, title: 'Người xem', role: 'reader', users: readers, handleOnDrop, handleDragOver, handleOnDrag, handleDeleteUser }} />
+                    <RoleOfUser
+                        {...{
+                            classes,
+                            title: 'Người sở hữu',
+                            role: 'owner',
+                            users: [owner],
+                            handleOnDrop,
+                            handleDragOver,
+                            handleOnDrag,
+                            handleDeleteUser,
+                        }}
+                    />
+                    <RoleOfUser
+                        {...{
+                            classes,
+                            title: 'Người chỉnh sửa',
+                            role: 'writer',
+                            users: writers,
+                            handleOnDrop,
+                            handleDragOver,
+                            handleOnDrag,
+                            handleDeleteUser,
+                        }}
+                    />
+                    <RoleOfUser
+                        {...{
+                            classes,
+                            title: 'Người xem',
+                            role: 'reader',
+                            users: readers,
+                            handleOnDrop,
+                            handleDragOver,
+                            handleOnDrag,
+                            handleDeleteUser,
+                        }}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button color='success' onClick={handleSave}>
@@ -214,9 +283,9 @@ function UsersGroup() {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <ListUser {...{ owners: owners, writers: writers, readers: readers }} />
+            <ListUserSearched {...{ owner, writers, readers }} />
         </Box>
     );
 }
 
-export default UsersGroup;
+export default UsersGroup

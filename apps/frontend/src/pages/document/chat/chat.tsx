@@ -1,5 +1,4 @@
-import { makeStyles } from 'tss-react/mui';
-import { MessageLeft, MessageRight } from '../../../components/message';
+import { MessageLeft, MessageRight } from '../../../components/user/message';
 import { useGlobalContext } from '../../../context';
 import { Box, Button, Container, Divider, Typography } from '@mui/material';
 import { CameraAlt, Close, Send } from '@mui/icons-material';
@@ -8,99 +7,23 @@ import { jwtDecode } from 'jwt-decode';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
 import React from 'react';
 import moment from 'moment';
 import { format } from 'date-fns';
+import { socket } from '../../../socket';
+import ChatStyles from '../../../assets/styles/chat';
 
-const useStyles = makeStyles()(() => {
-    return {
-        root: {
-            '& .Mui-focused': {
-                borderBottomColor: 'green', // Màu viền dưới khi focus
-            },
-        },
-        containerChat: {
-            width: '400px',
-            boxShadow: 'none',
-            borderRadius: '0',
-            padding: '0 !important',
-            height: '100%',
-        },
-        container: {
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-        },
-        headerChat: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            bottomBorder: '1px solid grey',
-            margin: '5px 0',
-            padding: '20px',
-        },
-        bodyChat: {
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '20px',
-            overflowY: 'auto',
-            flex: 1,
-        },
-        contentChat: {
-            marginTop: 'auto',
-        },
-        footerChat: {
-            margin: '20px 0',
-            display: 'flex',
-            justifyContent: 'space-around',
-        },
-        messageInput: {
-            width: '270px !important',
-            position: 'relative',
-        },
-        closeBtn: {
-            padding: 0,
-            minWidth: '24px',
-            color: 'green',
-        },
-        sendBtn: {
-            color: 'grey',
-            position: 'fixed',
-            bottom: '20px',
-            right: 0,
-        },
-        cameraBtn: {
-            color: 'grey',
-            position: 'fixed',
-            bottom: '20px',
-            right: '335px',
-        },
-        headerTitle: {
-            color: 'green',
-            fontWeight: 'bold',
-        },
-        divider: {
-            opacity: 1,
-        },
-        dateFormat: {
-            textAlign: 'center',
-            color: 'grey',
-            fontSize: '14px',
-            margin: '10px 0',
-        },
-    };
-});
 
-function Chat() {
-    const docId = useParams().id;
-    const socket = io('http://localhost:3000');
-    const { chat_url } = useGlobalContext();
-    const { classes } = useStyles();
+function Chat(this: any) {
+    const token = localStorage.getItem('token');
+    const { id } = useParams();
+    const docId = atob(id as string);
+    const { chat_url, notification_url } = useGlobalContext();
+    const { classes } = ChatStyles();
     const { openDrawer, setOpenDrawer } = useGlobalContext();
     const [messages, setMessages] = useState({});
-    const [message, setMessage] = useState('');
-    const token: string = localStorage.getItem('token') || '';
-    const decoded: any = jwtDecode(token);
+    const [message, setMessage] = useState<string>('');
+    const decoded: any = jwtDecode(token as string);
     let lastDate = '';
 
     useEffect(() => {
@@ -116,19 +39,24 @@ function Chat() {
     }, []);
 
     useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Connected');
-        });
-
         socket.on('send', (data) => {
             setMessages(data);
         });
 
         return () => {
-            socket.off('connect');
             socket.off('send');
         };
     }, []);
+
+    const handleSendNotification = () => {
+        axios
+            .post(`${notification_url}/send-notification`, { 
+                Authorization: `Bearer ${token}`,
+                data: { docId: docId, type: 'message' }
+            })
+            .then((res) => console.log(res.data.message))
+            .catch((err) => console.log(err))
+    };
 
     const handleSendMessage = (message: string) => {
         if (Object.keys(messages).length === 0)
@@ -140,9 +68,7 @@ function Chat() {
                 .then((res) => {
                     socket.emit('send', { data: res.data });
                 })
-                .catch((err) => {
-                    console.log('Error when send message: ', err);
-                })
+                .catch((err) => console.log('Error when send message: ', err))
         else
             axios
                 .put(`${chat_url}/${docId}`, {
@@ -152,11 +78,10 @@ function Chat() {
                 .then((res) => {
                     socket.emit('send', { data: res.data });
                 })
-                .catch((err) => {
-                    console.log('Error when send message: ', err);
-                })
+                .catch((err) => console.log('Error when send message: ', err))
 
         setMessage('');
+        handleSendNotification();
     };
 
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -226,7 +151,6 @@ function Chat() {
                         placeholder='Type in here…'
                         variant='outlined'
                         maxRows={8}
-                        color='neutral'
                         onChange={(e) => setMessage(e.target.value)}
                         value={message}
                         onKeyDown={(e) => {
@@ -236,7 +160,7 @@ function Chat() {
                             }
                         }}
                     />
-                    <Button className={classes.sendBtn}>
+                    <Button className={classes.sendBtn} onClick={handleSendMessage.bind(this, message)}>
                         <Send />
                     </Button>
                 </Box>

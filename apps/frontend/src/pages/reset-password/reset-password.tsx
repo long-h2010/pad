@@ -1,14 +1,12 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { Key, Lock } from '@mui/icons-material';
-import FieldInput from '../../components/field-input';
+import FieldInput from '../../components/inputs/field-input';
+import LoginStyles from '../../assets/styles/login';
 
 const ResetPassword: React.FC<any> = (props) => {
-    const classes = props.classes;
-    const error = props.error;
-    const setPassword = props.setPassword;
-    const setConfirmPassword = props.setConfirmPassword;
-    const handleResetPassword = props.handleResetPassword;
+    const { classes } = LoginStyles();
+    const { error, setPassword, setConfirmPassword, handleResetPassword } = props;
 
     return (
         <>
@@ -31,7 +29,7 @@ const ResetPassword: React.FC<any> = (props) => {
                     type: 'password',
                     icon: <Lock className={classes.iconInput} />,
                     placeholder: 'Enter your new password',
-                    setElement: setPassword,
+                    setValue: setPassword,
                 }}
             />
             <FieldInput
@@ -42,7 +40,7 @@ const ResetPassword: React.FC<any> = (props) => {
                     type: 'password',
                     icon: <Lock className={classes.iconInput} />,
                     placeholder: 'Confirm new password',
-                    setElement: setConfirmPassword,
+                    setValue: setConfirmPassword,
                 }}
             />
             <p className='error'>{error}</p>

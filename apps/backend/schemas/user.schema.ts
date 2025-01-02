@@ -19,7 +19,7 @@ export class User {
     @Prop()
     nickname: string;
 
-    @Prop({ default: '/img' })
+    @Prop()
     avatar: string;
 
     @Prop({enum: Gender})

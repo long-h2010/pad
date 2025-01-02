@@ -23,10 +23,12 @@ export class ChatService {
         });
 
         const result: any = messages.map(async (mess: any) => {
+            const user = await this.userService.findById(mess.userId);
             return {
                 id: mess._id,
                 userId: mess.userId,
-                username: await this.userService.getNameById(mess.userId) || 'Unknown',
+                username: user.name || 'Unknown',
+                avatar: user.avatar,
                 message: mess.message,
                 time: mess.time
             }

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import useStyles from '../login/styles';
 import axios from 'axios';
 import { useGlobalContext } from '../../context';
 import SendOTP from './send-otp';
@@ -7,12 +6,12 @@ import VerifyOTP from './verify-otp';
 import ResetPassword from './reset-password';
 import { useNavigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
-import LinkBack from '../../components/link-back';
-import AlertMessage from '../../components/alert';
+import BackTo from '../../components/link/back-to';
+import LoginStyles from '../../assets/styles/login';
 
 function ForgotPassword() {
-    const { auth_url, error, setError, setAlertMessage, setShowAlert } = useGlobalContext();
-    const { classes } = useStyles();
+    const { auth_url, error, setError, setAlertInfor, setShowAlert } = useGlobalContext();
+    const { classes } = LoginStyles();
     const navigateTo = useNavigate();
     const [sendOtpStatus, setSendOtpStatus] = useState(true);
     const [verifyOtpStatus, setVerifyOtpStatus] = useState(false);
@@ -48,7 +47,7 @@ function ForgotPassword() {
             axios
                 .post(`${auth_url}/reset-password`, { username: username, password: password })
                 .then(() => {
-                    setAlertMessage('Reset password successful');
+                    setAlertInfor(['success', 'Reset password successful']);
                     setShowAlert(true);
                     setError('');
                     setTimeout(() => {
@@ -61,17 +60,16 @@ function ForgotPassword() {
 
     return (
         <Container>
-            <LinkBack classes={classes} title={'loginpage'} href={'/login'} />
+            <BackTo {...{ page: 'Login page', href: '/login' }} />
             <Container className={classes.imageBackground}>
                 <Box className={classes.paper}>
                     <Box>
-                        {sendOtpStatus && (<SendOTP {...{ classes: classes, setUsername: setUsername, error: error, handleSendOtp: handleSendOtp }} />)}
-                        {verifyOtpStatus && <VerifyOTP {...{ classes: classes, error: error, handleVerifyOtp: handleVerifyOtp }} />}
-                        {resetPasswordStatus && <ResetPassword {...{ classes: classes, error: error, setPassword: setPassword, setConfirmPassword: setConfirmPassword, handleResetPassword: handleResetPassword }} />}
+                        {sendOtpStatus && (<SendOTP {...{ setUsername, error, handleSendOtp }} />)}
+                        {verifyOtpStatus && <VerifyOTP {...{ error, handleVerifyOtp }} />}
+                        {resetPasswordStatus && <ResetPassword {...{ error, setPassword, setConfirmPassword, handleResetPassword }} />}
                     </Box>
                 </Box>
             </Container>
-            <AlertMessage />
         </Container>
     );
 }
